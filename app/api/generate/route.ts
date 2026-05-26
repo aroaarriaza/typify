@@ -24,19 +24,29 @@ export async function POST(req: Request) {
     return new Response(credit.error ?? 'Sin créditos', { status: 402 })
   }
 
-  // Llamar a Groq con streaming y guardar el resultado al terminar
-  const result = streamText({
-    model: groq('llama-3.1-8b-instant'),
-    system: 'Eres un experto en copywriting. Escribe textos claros, persuasivos y bien estructurados en español. Responde directamente con el texto solicitado, sin introducciones ni explicaciones.',
-    prompt,
-    onFinish: async ({ text }) => {
-      await supabase.from('generations').insert({
-        user_id: user.id,
-        prompt,
-        result: text,
-      })
-    },
-  })
+  try {
+    const result = streamText({
+      model: groq('llama-3.1-8b-instant'),
+      system: 'Eres un experto en copywriting. Escribe textos claros, persuasivos y bien estructurados en español. Responde directamente con el texto solicitado, sin introducciones ni explicaciones.',
+      prompt,
+      onFinish: async ({ text }) => {
+        await supabase.from('generations').insert({
+          user_id: user.id,
+          prompt,
+          result: text,
+        })
+      },
+    })
 
-  return result.toTextStreamResponse()
+    return result.toTextStreamResponse()
+  } catch {
+    // Si Groq falla, devolvemos el crédito
+    const { data: profile } = await supabase
+      .from('profiles').select('credits').eq('id', user.id).single()
+    if (profile) {
+      await supabase
+        .from('profiles').update({ credits: profile.credits + 1 }).eq('id', user.id)
+    }
+    return new Response('Error al generar el texto', { status: 500 })
+  }
 }

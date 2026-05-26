@@ -14,6 +14,7 @@ export default function Generator({ credits }: { credits: number }) {
 
   const { completion, input, handleInputChange, handleSubmit, isLoading, error, setCompletion } = useCompletion({
     api: '/api/generate',
+    streamProtocol: 'text',
     onFinish: () => {
       router.refresh() // recarga el servidor para actualizar los créditos
     },
