@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { getProfile } from '@/lib/credits'
 import { logout } from '../(auth)/actions'
 import Generator from './components/Generator'
+import PlanActions from './components/PlanActions'
 
 export default async function DashboardPage() {
   const supabase = await createClient()
@@ -43,12 +44,13 @@ export default async function DashboardPage() {
               {plan === 'pro' ? 'Pro' : 'Gratis'}
             </span>
           </div>
-          <div className="w-full bg-gray-100 rounded-full h-1.5">
+          <div className="w-full bg-gray-100 rounded-full h-1.5 mb-3">
             <div
               className={`h-1.5 rounded-full transition-all ${credits > 3 ? 'bg-indigo-500' : 'bg-red-400'}`}
               style={{ width: `${(credits / maxCredits) * 100}%` }}
             />
           </div>
+          <PlanActions plan={plan} />
         </div>
 
         {/* Generador */}

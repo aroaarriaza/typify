@@ -1,6 +1,20 @@
+'use client'
+
 import Link from 'next/link'
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 
 export default function UpgradePage() {
+  const [loading, setLoading] = useState(false)
+  const router = useRouter()
+
+  async function handleUpgrade() {
+    setLoading(true)
+    const res = await fetch('/api/checkout', { method: 'POST' })
+    const { url } = await res.json()
+    router.push(url)
+  }
+
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center px-6">
       <div className="max-w-md w-full">
@@ -17,7 +31,7 @@ export default function UpgradePage() {
               <span className="text-2xl font-bold text-indigo-600">9€<span className="text-sm font-normal text-gray-500">/mes</span></span>
             </div>
             <ul className="space-y-2 text-sm text-gray-600">
-              {['100 créditos al mes', 'Acceso a todos los tipos de texto', 'Historial ilimitado'].map(item => (
+              {['100 créditos al mes', 'Acceso a todos los tipos de texto', 'Historial ilimitado', 'Cancela cuando quieras'].map(item => (
                 <li key={item} className="flex items-center gap-2">
                   <span className="text-indigo-500">✓</span> {item}
                 </li>
@@ -26,10 +40,11 @@ export default function UpgradePage() {
           </div>
 
           <button
-            disabled
-            className="w-full bg-indigo-600 text-white rounded-xl py-3 text-sm font-medium opacity-60 cursor-not-allowed mb-3"
+            onClick={handleUpgrade}
+            disabled={loading}
+            className="w-full bg-indigo-600 text-white rounded-xl py-3 text-sm font-medium hover:bg-indigo-700 transition-colors disabled:opacity-60 mb-3"
           >
-            Próximamente — Pago con Stripe
+            {loading ? 'Redirigiendo...' : 'Suscribirse por 9€/mes'}
           </button>
 
           <Link href="/dashboard" className="text-sm text-gray-500 hover:text-gray-700">
