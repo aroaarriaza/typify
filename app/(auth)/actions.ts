@@ -4,7 +4,9 @@ import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 
-export async function login(formData: FormData) {
+export type AuthState = { error?: string } | null
+
+export async function login(prevState: AuthState, formData: FormData): Promise<AuthState> {
   const supabase = await createClient()
 
   const { error } = await supabase.auth.signInWithPassword({
@@ -18,7 +20,7 @@ export async function login(formData: FormData) {
   redirect('/dashboard')
 }
 
-export async function register(formData: FormData) {
+export async function register(prevState: AuthState, formData: FormData): Promise<AuthState> {
   const supabase = await createClient()
 
   const { error } = await supabase.auth.signUp({
