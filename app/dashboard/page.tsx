@@ -19,6 +19,9 @@ export default async function DashboardPage() {
         <h1 className="text-lg font-semibold text-gray-900">Typify</h1>
         <div className="flex items-center gap-3 sm:gap-4 min-w-0">
           <span className="hidden sm:block text-sm text-gray-500 truncate max-w-[180px]">{user?.email}</span>
+          {user?.email === 'aroaarriaza@gmail.com' && (
+            <a href="/admin" className="text-xs text-indigo-600 hover:underline whitespace-nowrap">Admin</a>
+          )}
           <form action={logout}>
             <button type="submit" className="text-sm text-gray-500 hover:text-gray-900 transition-colors whitespace-nowrap">
               Cerrar sesión
