@@ -17,11 +17,25 @@ const CATEGORIES = [
   'Belleza y cuidado', 'Juguetes', 'Alimentación', 'Mascotas', 'Otro',
 ]
 
+const PLATFORMS = ['Amazon', 'Etsy', 'Shopify', 'eBay', 'WooCommerce']
+const TONES = ['Profesional', 'Premium', 'Casual', 'Técnico', 'Urgente']
+const LANGUAGES = [
+  { code: 'español', label: 'Español' },
+  { code: 'inglés', label: 'English' },
+  { code: 'francés', label: 'Français' },
+  { code: 'alemán', label: 'Deutsch' },
+  { code: 'italiano', label: 'Italiano' },
+  { code: 'portugués', label: 'Português' },
+]
+
 export default function Generator({ credits }: { credits: number }) {
   const router = useRouter()
   const [productName, setProductName] = useState('')
   const [category, setCategory] = useState('')
   const [features, setFeatures] = useState('')
+  const [platform, setPlatform] = useState('')
+  const [tone, setTone] = useState('Profesional')
+  const [language, setLanguage] = useState('español')
   const [listing, setListing] = useState<Listing | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
@@ -36,7 +50,7 @@ export default function Generator({ credits }: { credits: number }) {
     const res = await fetch('/api/generate', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ productName, category, features }),
+      body: JSON.stringify({ productName, category, features, platform, tone, language }),
     })
 
     if (!res.ok) {
@@ -99,6 +113,65 @@ export default function Generator({ credits }: { credits: number }) {
             disabled={loading || noCredits}
             className="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none disabled:bg-gray-50"
           />
+        </div>
+
+        {/* Plataforma */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Plataforma</label>
+          <div className="flex flex-wrap gap-2">
+            {PLATFORMS.map(p => (
+              <button
+                key={p}
+                type="button"
+                disabled={loading || noCredits}
+                onClick={() => setPlatform(platform === p ? '' : p)}
+                className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-colors ${
+                  platform === p
+                    ? 'bg-indigo-600 border-indigo-600 text-white'
+                    : 'bg-white border-gray-200 text-gray-600 hover:border-indigo-300 hover:text-indigo-600'
+                } disabled:opacity-50`}
+              >
+                {p}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Tono */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Tono</label>
+          <div className="flex flex-wrap gap-2">
+            {TONES.map(t => (
+              <button
+                key={t}
+                type="button"
+                disabled={loading || noCredits}
+                onClick={() => setTone(t)}
+                className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-colors ${
+                  tone === t
+                    ? 'bg-indigo-600 border-indigo-600 text-white'
+                    : 'bg-white border-gray-200 text-gray-600 hover:border-indigo-300 hover:text-indigo-600'
+                } disabled:opacity-50`}
+              >
+                {t}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Idioma */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Idioma de salida</label>
+          <select
+            value={language}
+            onChange={e => setLanguage(e.target.value)}
+            disabled={loading || noCredits}
+            className="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:bg-gray-50 bg-white"
+          >
+            {LANGUAGES.map(l => (
+              <option key={l.code} value={l.code}>{l.label}</option>
+            ))}
+          </select>
         </div>
 
         {error && (

@@ -20,21 +20,51 @@ export async function POST(req: Request) {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return new Response('No autorizado', { status: 401 })
 
-  const { productName, category, features } = await req.json()
+  const { productName, category, features, platform, tone, language } = await req.json()
   if (!productName?.trim()) return new Response('Nombre de producto requerido', { status: 400 })
 
   const credit = await deductCredit()
   if (!credit.ok) return new Response(credit.error ?? 'Sin créditos', { status: 402 })
 
+  const platformInstructions: Record<string, string> = {
+    Amazon: 'Optimiza para Amazon: título con keywords principales al inicio (máx 200 caracteres), bullet points enfocados en beneficios y especificaciones técnicas, descripción orientada a conversión en móvil.',
+    Etsy: 'Optimiza para Etsy: tono artesanal y personal, destaca la historia y unicidad del producto, keywords long-tail naturales, descripción con storytelling.',
+    Shopify: 'Optimiza para Shopify/tienda propia: descripción de marca más larga y detallada, enfoque en experiencia de usuario y valor de marca.',
+    eBay: 'Optimiza para eBay: incluye especificaciones técnicas detalladas, estado del producto, keywords directas y comparativas, tono informativo.',
+    WooCommerce: 'Optimiza para WooCommerce: descripción detallada orientada a SEO orgánico, estructura clara con beneficios y especificaciones.',
+  }
+
+  const toneInstructions: Record<string, string> = {
+    Profesional: 'Tono profesional y corporativo: lenguaje formal, preciso y confiable.',
+    Premium: 'Tono premium y de lujo: lenguaje sofisticado, aspiracional, que transmite exclusividad y calidad superior.',
+    Casual: 'Tono casual y cercano: lenguaje directo, amigable y conversacional, como si hablaras con un amigo.',
+    Técnico: 'Tono técnico y detallado: enfócate en especificaciones, materiales, medidas y datos objetivos.',
+    Urgente: 'Tono urgente con llamada a la acción: crea sensación de oportunidad, escasez y beneficio inmediato.',
+  }
+
+  const platformHint = platform && platformInstructions[platform] ? platformInstructions[platform] : ''
+  const toneHint = tone && toneInstructions[tone] ? toneInstructions[tone] : toneInstructions['Profesional']
+  const outputLanguage = language || 'español'
+
   try {
     const { object } = await generateObject({
       model: groq('meta-llama/llama-4-scout-17b-16e-instruct'),
       schema: listingSchema,
-      prompt: `Eres un experto en copywriting para e-commerce. Genera un listing completo en español para el siguiente producto:
+      prompt: `Eres un experto en copywriting para e-commerce. Genera un listing completo para el siguiente producto.
 
+PRODUCTO
 Nombre: ${productName}
 Categoría: ${category || 'General'}
 Características: ${features || 'No especificadas'}
+
+INSTRUCCIONES DE PLATAFORMA
+${platformHint || 'Listing genérico optimizado para e-commerce.'}
+
+TONO
+${toneHint}
+
+IDIOMA
+Genera TODO el contenido en ${outputLanguage}. Título, descripción, meta-tags, keywords y bullet points deben estar íntegramente en ${outputLanguage}.
 
 Genera todos los campos del listing de forma persuasiva, optimizada para SEO y orientada a la conversión.`,
     })
