@@ -28,7 +28,7 @@ export async function POST(req: Request) {
 
   try {
     const { object } = await generateObject({
-      model: groq('llama-3.3-70b-specdec'),
+      model: groq('meta-llama/llama-4-scout-17b-16e-instruct'),
       schema: listingSchema,
       prompt: `Eres un experto en copywriting para e-commerce. Genera un listing completo en español para el siguiente producto:
 
