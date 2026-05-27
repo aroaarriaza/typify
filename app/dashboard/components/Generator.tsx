@@ -131,7 +131,17 @@ export default function Generator({ credits }: { credits: number }) {
       {/* Resultado */}
       {listing && (
         <div className="space-y-4 border-t border-gray-100 pt-6">
-          <h3 className="text-sm font-semibold text-gray-900">Listing generado</h3>
+          <div className="flex items-center justify-between">
+            <h3 className="text-sm font-semibold text-gray-900">Listing generado</h3>
+            <button
+              onClick={() => copyField(
+                `TÍTULO\n${listing.title}\n\nDESCRIPCIÓN\n${listing.description}\n\nMETA-TÍTULO\n${listing.metaTitle}\n\nMETA-DESCRIPCIÓN\n${listing.metaDescription}\n\nPUNTOS CLAVE\n${listing.bulletPoints.map(b => `• ${b}`).join('\n')}\n\nPALABRAS CLAVE\n${listing.keywords.join(', ')}`
+              )}
+              className="text-xs text-indigo-600 hover:underline font-medium"
+            >
+              Copiar todo
+            </button>
+          </div>
 
           <Field label="Título" value={listing.title} onCopy={() => copyField(listing.title)} />
           <Field label="Descripción" value={listing.description} onCopy={() => copyField(listing.description)} multiline />
