@@ -1,8 +1,7 @@
+import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { getProfile } from '@/lib/credits'
-import { logout } from '../(auth)/actions'
 import Generator from './components/Generator'
-import PlanActions from './components/PlanActions'
 
 export default async function DashboardPage() {
   const supabase = await createClient()
@@ -13,25 +12,17 @@ export default async function DashboardPage() {
   const plan = profile?.plan ?? 'free'
   const maxCredits = plan === 'pro' ? 100 : 10
   const pct = Math.min((credits / maxCredits) * 100, 100)
+  const initial = (user?.email?.[0] ?? 'U').toUpperCase()
 
   return (
     <div className="min-h-screen aurora-bg" style={{background: 'linear-gradient(160deg, #f8f7ff 0%, #fafafa 50%, #f0f0ff 100%)'}}>
 
       {/* Header */}
-      <header className="glass border-b border-white/60 px-4 sm:px-6 py-3.5 flex items-center justify-between sticky top-0 z-50">
+      <header className="glass border-b border-white/60 px-4 sm:px-6 py-3 flex items-center justify-between sticky top-0 z-50">
         <span className="text-base font-bold gradient-text">Typify</span>
-        <div className="flex items-center gap-3 sm:gap-4 min-w-0">
-          <span className="hidden sm:block text-xs text-gray-400 truncate max-w-[160px]">{user?.email}</span>
-          <a href="/dashboard/history" className="text-xs text-gray-500 hover:text-indigo-600 transition-colors whitespace-nowrap">Historial</a>
-          {user?.email === 'aroaarriaza@gmail.com' && (
-            <a href="/admin" className="text-xs text-indigo-500 hover:text-indigo-700 font-medium whitespace-nowrap">Admin</a>
-          )}
-          <form action={logout}>
-            <button type="submit" className="text-xs text-gray-400 hover:text-gray-700 transition-colors whitespace-nowrap">
-              Salir
-            </button>
-          </form>
-        </div>
+        <Link href="/dashboard/profile" className="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-violet-500 flex items-center justify-center shadow-sm hover:opacity-90 transition-opacity">
+          <span className="text-sm font-bold text-white">{initial}</span>
+        </Link>
       </header>
 
       <main className="max-w-2xl mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-4 sm:space-y-5">
@@ -56,7 +47,7 @@ export default async function DashboardPage() {
           </div>
 
           {/* Barra de progreso animada */}
-          <div className="w-full bg-gray-100 rounded-full h-1.5 mb-3 overflow-hidden">
+          <div className="w-full bg-gray-100 rounded-full h-1.5 overflow-hidden">
             <div
               className={`h-1.5 rounded-full transition-all duration-700 ease-out ${
                 credits <= 2 ? 'bg-red-400' : 'bg-gradient-to-r from-indigo-500 to-violet-500'
@@ -64,7 +55,6 @@ export default async function DashboardPage() {
               style={{ width: `${pct}%` }}
             />
           </div>
-          <PlanActions plan={plan} />
         </div>
 
         {/* Generador */}

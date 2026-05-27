@@ -59,7 +59,7 @@ export default function TermsPage() {
 
           <section>
             <h2 className="font-semibold text-gray-900 mb-2">10. Contacto</h2>
-            <p>Para cualquier consulta sobre estos términos, contacta con nosotros en: <a href="mailto:hola@typify.app" className="text-indigo-600 hover:underline">hola@typify.app</a></p>
+            <p>Para cualquier consulta sobre estos términos, contacta con nosotros en: <a href="mailto:aroa@visualvol.com" className="text-indigo-600 hover:underline">aroa@visualvol.com</a></p>
           </section>
         </div>
       </main>
