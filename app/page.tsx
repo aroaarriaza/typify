@@ -4,11 +4,11 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-white">
       {/* Nav */}
-      <nav className="flex items-center justify-between px-6 py-4 max-w-5xl mx-auto">
+      <nav className="flex items-center justify-between px-4 sm:px-6 py-4 max-w-5xl mx-auto">
         <span className="text-xl font-bold text-indigo-600">Typify</span>
-        <div className="flex items-center gap-4">
-          <Link href="/pricing" className="text-sm text-gray-600 hover:text-gray-900">Precios</Link>
-          <Link href="/login" className="text-sm text-gray-600 hover:text-gray-900">Iniciar sesión</Link>
+        <div className="flex items-center gap-3 sm:gap-4">
+          <Link href="/pricing" className="hidden sm:block text-sm text-gray-600 hover:text-gray-900">Precios</Link>
+          <Link href="/login" className="hidden sm:block text-sm text-gray-600 hover:text-gray-900">Iniciar sesión</Link>
           <Link href="/register" className="bg-indigo-600 text-white text-sm px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors">
             Empezar gratis
           </Link>
