@@ -130,7 +130,7 @@ export default function Generator({ credits }: { credits: number }) {
 
       {/* Resultado */}
       {listing && (
-        <div className="space-y-4 border-t border-gray-100 pt-6">
+        <div className="space-y-3 border-t border-gray-100 pt-6 animate-fade-up">
           <div className="flex items-center justify-between">
             <h3 className="text-sm font-semibold text-gray-900">Listing generado</h3>
             <button
@@ -148,7 +148,7 @@ export default function Generator({ credits }: { credits: number }) {
           <Field label="Meta-título SEO" value={listing.metaTitle} onCopy={() => copyField(listing.metaTitle)} />
           <Field label="Meta-descripción SEO" value={listing.metaDescription} onCopy={() => copyField(listing.metaDescription)} />
 
-          <div className="bg-gray-50 border border-gray-200 rounded-xl p-4">
+          <div className="bg-gray-50/80 border border-gray-200 rounded-xl p-4 card-hover">
             <div className="flex justify-between items-center mb-2">
               <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">Puntos clave</span>
               <button onClick={() => copyField(listing.bulletPoints.map(b => `• ${b}`).join('\n'))} className="text-xs text-indigo-600 hover:underline">Copiar</button>
@@ -160,7 +160,7 @@ export default function Generator({ credits }: { credits: number }) {
             </ul>
           </div>
 
-          <div className="bg-gray-50 border border-gray-200 rounded-xl p-4">
+          <div className="bg-gray-50/80 border border-gray-200 rounded-xl p-4 card-hover">
             <div className="flex justify-between items-center mb-2">
               <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">Palabras clave SEO</span>
               <button onClick={() => copyField(listing.keywords.join(', '))} className="text-xs text-indigo-600 hover:underline">Copiar</button>
@@ -179,7 +179,7 @@ export default function Generator({ credits }: { credits: number }) {
 
 function Field({ label, value, onCopy, multiline }: { label: string; value: string; onCopy: () => void; multiline?: boolean }) {
   return (
-    <div className="bg-gray-50 border border-gray-200 rounded-xl p-4">
+    <div className="bg-gray-50/80 border border-gray-200 rounded-xl p-4 card-hover">
       <div className="flex justify-between items-center mb-1.5">
         <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">{label}</span>
         <button onClick={onCopy} className="text-xs text-indigo-600 hover:underline">Copiar</button>

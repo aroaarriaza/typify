@@ -8,8 +8,9 @@ export default function LoginPage() {
   const [state, action, pending] = useActionState(login, null)
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
-      <div className="w-full max-w-md bg-white rounded-2xl shadow-sm p-6 sm:p-8">
+    <div className="min-h-screen flex items-center justify-center aurora-bg px-4" style={{background: 'linear-gradient(160deg, #f8f7ff 0%, #fafafa 60%, #f0f0ff 100%)'}}>
+      <div className="w-full max-w-md glass rounded-2xl shadow-lg shadow-indigo-100/40 p-6 sm:p-8 animate-fade-up">
+        <p className="gradient-text text-sm font-bold mb-3">Typify</p>
         <h1 className="text-2xl font-bold text-gray-900 mb-2">Iniciar sesión</h1>
         <p className="text-gray-500 text-sm mb-8">
           ¿No tienes cuenta?{' '}

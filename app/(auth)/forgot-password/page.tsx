@@ -8,8 +8,8 @@ export default function ForgotPasswordPage() {
   const [state, action, pending] = useActionState(forgotPassword, null)
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
-      <div className="w-full max-w-md bg-white rounded-2xl shadow-sm p-6 sm:p-8">
+    <div className="min-h-screen flex items-center justify-center aurora-bg px-4" style={{background: 'linear-gradient(160deg, #f8f7ff 0%, #fafafa 60%, #f0f0ff 100%)'}}>
+      <div className="w-full max-w-md glass rounded-2xl shadow-lg shadow-indigo-100/40 p-6 sm:p-8 animate-fade-up">
         <Link href="/login" className="text-sm text-gray-400 hover:text-gray-600 mb-6 inline-block">
           ← Volver al login
         </Link>
