@@ -1,21 +1,17 @@
 'use client'
 
-import Link from 'next/link'
 import { useActionState } from 'react'
-import { login } from '../actions'
+import { updatePassword } from '../actions'
 
-export default function LoginPage() {
-  const [state, action, pending] = useActionState(login, null)
+export default function ResetPasswordPage() {
+  const [state, action, pending] = useActionState(updatePassword, null)
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
       <div className="w-full max-w-md bg-white rounded-2xl shadow-sm p-8">
-        <h1 className="text-2xl font-bold text-gray-900 mb-2">Iniciar sesión</h1>
+        <h1 className="text-2xl font-bold text-gray-900 mb-2">Nueva contraseña</h1>
         <p className="text-gray-500 text-sm mb-8">
-          ¿No tienes cuenta?{' '}
-          <Link href="/register" className="text-indigo-600 hover:underline">
-            Regístrate gratis
-          </Link>
+          Elige una contraseña segura de al menos 6 caracteres.
         </p>
 
         <form action={action} className="space-y-4">
@@ -26,27 +22,15 @@ export default function LoginPage() {
           )}
 
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-              Email
-            </label>
-            <input
-              id="email"
-              name="email"
-              type="email"
-              required
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            />
-          </div>
-
-          <div>
             <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
-              Contraseña
+              Nueva contraseña
             </label>
             <input
               id="password"
               name="password"
               type="password"
               required
+              minLength={6}
               className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
           </div>
@@ -56,14 +40,8 @@ export default function LoginPage() {
             disabled={pending}
             className="w-full bg-indigo-600 text-white rounded-lg py-2 text-sm font-medium hover:bg-indigo-700 transition-colors disabled:opacity-60"
           >
-            {pending ? 'Entrando...' : 'Entrar'}
+            {pending ? 'Guardando...' : 'Guardar nueva contraseña'}
           </button>
-
-          <div className="text-center">
-            <Link href="/forgot-password" className="text-sm text-gray-500 hover:text-indigo-600">
-              ¿Olvidaste tu contraseña?
-            </Link>
-          </div>
         </form>
       </div>
     </div>

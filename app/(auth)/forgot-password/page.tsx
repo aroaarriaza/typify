@@ -2,26 +2,27 @@
 
 import Link from 'next/link'
 import { useActionState } from 'react'
-import { register } from '../actions'
+import { forgotPassword } from '../actions'
 
-export default function RegisterPage() {
-  const [state, action, pending] = useActionState(register, null)
+export default function ForgotPasswordPage() {
+  const [state, action, pending] = useActionState(forgotPassword, null)
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
       <div className="w-full max-w-md bg-white rounded-2xl shadow-sm p-8">
-        <h1 className="text-2xl font-bold text-gray-900 mb-2">Crear cuenta</h1>
+        <Link href="/login" className="text-sm text-gray-400 hover:text-gray-600 mb-6 inline-block">
+          ← Volver al login
+        </Link>
+
+        <h1 className="text-2xl font-bold text-gray-900 mb-2">Restablecer contraseña</h1>
         <p className="text-gray-500 text-sm mb-8">
-          ¿Ya tienes cuenta?{' '}
-          <Link href="/login" className="text-indigo-600 hover:underline">
-            Inicia sesión
-          </Link>
+          Introduce tu email y te enviaremos un enlace para crear una nueva contraseña.
         </p>
 
         {state?.success ? (
           <div className="bg-green-50 border border-green-200 text-green-800 text-sm rounded-xl px-4 py-6 text-center">
             <div className="text-3xl mb-3">📬</div>
-            <p className="font-medium mb-1">¡Cuenta creada!</p>
+            <p className="font-medium mb-1">Email enviado</p>
             <p className="text-green-700">{state.success}</p>
           </div>
         ) : (
@@ -45,31 +46,13 @@ export default function RegisterPage() {
               />
             </div>
 
-            <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
-                Contraseña
-              </label>
-              <input
-                id="password"
-                name="password"
-                type="password"
-                required
-                minLength={6}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              />
-            </div>
-
             <button
               type="submit"
               disabled={pending}
               className="w-full bg-indigo-600 text-white rounded-lg py-2 text-sm font-medium hover:bg-indigo-700 transition-colors disabled:opacity-60"
             >
-              {pending ? 'Creando cuenta...' : 'Crear cuenta gratis'}
+              {pending ? 'Enviando...' : 'Enviar enlace de recuperación'}
             </button>
-
-            <p className="text-xs text-gray-400 text-center">
-              Incluye 10 créditos gratis para empezar
-            </p>
           </form>
         )}
       </div>
