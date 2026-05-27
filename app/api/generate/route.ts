@@ -1,7 +1,10 @@
 import { generateObject } from 'ai'
+import { createGroq } from '@ai-sdk/groq'
 import { z } from 'zod'
 import { createClient } from '@/lib/supabase/server'
 import { deductCredit } from '@/lib/credits'
+
+const groq = createGroq({ apiKey: process.env.GROQ_API_KEY })
 
 const listingSchema = z.object({
   title: z.string().describe('Título atractivo del producto (máx 60 caracteres)'),
@@ -25,7 +28,7 @@ export async function POST(req: Request) {
 
   try {
     const { object } = await generateObject({
-      model: 'groq/llama-3.3-70b-versatile',
+      model: groq('llama-3.3-70b-versatile'),
       schema: listingSchema,
       prompt: `Eres un experto en copywriting para e-commerce. Genera un listing completo en español para el siguiente producto:
 
