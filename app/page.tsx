@@ -48,35 +48,38 @@ export default function HomePage() {
           <p className="animate-fade-up delay-400 text-xs text-gray-400 mt-5">Sin tarjeta de crédito · 10 generaciones gratis</p>
         </div>
 
-        {/* 3 floating cards staggered */}
-        <div className="relative z-10 mt-16 h-56 sm:h-64 max-w-2xl mx-auto">
+        {/* 3 metric cards staggered */}
+        <div className="relative z-10 mt-16 h-52 sm:h-56 max-w-2xl mx-auto">
 
-          {/* Card título — izquierda, flota lento */}
-          <div className="animate-float-slow absolute left-0 top-4 w-52 sm:w-60 glass rounded-2xl shadow-lg shadow-indigo-100 p-4 text-left border border-indigo-50 -rotate-2">
-            <p className="text-xs text-indigo-400 font-semibold uppercase tracking-wide mb-1.5">Título</p>
-            <p className="text-xs sm:text-sm font-semibold text-gray-800 leading-snug">Zapatillas Adidas Mujer — Ligeras y con Estilo</p>
+          {/* Card izquierda — tiempo */}
+          <div className="animate-float-slow absolute left-0 top-6 w-40 sm:w-44 glass rounded-2xl shadow-lg shadow-indigo-100 p-4 text-left border border-indigo-50 -rotate-2">
+            <p className="text-xs text-indigo-400 font-semibold uppercase tracking-wide mb-2">Generación</p>
+            <p className="text-3xl font-bold text-gray-900">~8<span className="text-base font-normal text-gray-400">s</span></p>
+            <p className="text-xs text-gray-400 mt-1">listing completo</p>
           </div>
 
-          {/* Card keywords — centro arriba, flota normal */}
-          <div className="animate-float absolute left-1/2 -translate-x-1/2 -top-2 w-48 sm:w-56 glass rounded-2xl shadow-xl shadow-violet-100 p-4 text-left border border-violet-50 z-10">
-            <p className="text-xs text-violet-400 font-semibold uppercase tracking-wide mb-2">Keywords</p>
-            <div className="flex flex-wrap gap-1">
-              {['running', 'Adidas', 'mujer', 'ligeras'].map(k => (
-                <span key={k} className="bg-indigo-50 text-indigo-600 text-xs px-2 py-0.5 rounded-full">{k}</span>
+          {/* Card centro — campos generados (más grande) */}
+          <div className="animate-float absolute left-1/2 -translate-x-1/2 -top-2 w-48 sm:w-52 glass rounded-2xl shadow-xl shadow-violet-100 p-4 text-left border border-violet-50 z-10">
+            <p className="text-xs text-violet-500 font-semibold uppercase tracking-wide mb-3">Campos generados</p>
+            <div className="space-y-1.5">
+              {['Título SEO', 'Descripción', 'Meta-título', 'Meta-descripción', 'Keywords', 'Bullet points'].map(f => (
+                <div key={f} className="flex items-center gap-2">
+                  <span className="w-4 h-4 rounded-full bg-gradient-to-br from-indigo-500 to-violet-500 flex items-center justify-center shrink-0">
+                    <span className="text-white" style={{fontSize: '8px'}}>✓</span>
+                  </span>
+                  <span className="text-xs text-gray-600">{f}</span>
+                </div>
               ))}
             </div>
           </div>
 
-          {/* Card bullets — derecha, flota rápido */}
-          <div className="animate-float delay-300 absolute right-0 top-6 w-52 sm:w-60 glass rounded-2xl shadow-lg shadow-purple-100 p-4 text-left border border-purple-50 rotate-2">
-            <p className="text-xs text-purple-400 font-semibold uppercase tracking-wide mb-1.5">Puntos clave</p>
-            <ul className="space-y-1">
-              {['Suela ultraligera 180g', 'Amortiguación Boost', 'Disponible en 6 colores'].map(b => (
-                <li key={b} className="text-xs text-gray-600 flex items-center gap-1.5">
-                  <span className="text-indigo-400 shrink-0">•</span>{b}
-                </li>
-              ))}
-            </ul>
+          {/* Card derecha — SEO */}
+          <div className="animate-float delay-300 absolute right-0 top-8 w-40 sm:w-44 glass rounded-2xl shadow-lg shadow-purple-100 p-4 text-left border border-purple-50 rotate-2">
+            <p className="text-xs text-purple-400 font-semibold uppercase tracking-wide mb-2">SEO Score</p>
+            <p className="text-3xl font-bold text-gray-900">98<span className="text-base font-normal text-gray-400">/100</span></p>
+            <div className="mt-2 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+              <div className="h-full rounded-full bg-gradient-to-r from-indigo-500 to-violet-500" style={{width: '98%'}} />
+            </div>
           </div>
 
         </div>
