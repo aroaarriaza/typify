@@ -34,7 +34,8 @@ export default async function HistoryPage() {
         ) : (
           <div className="space-y-3">
             {generations.map((gen) => {
-              let result: Record<string, unknown> = {}
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              let result: Record<string, any> = {}
               try { result = JSON.parse(gen.result ?? '{}') } catch { result = {} }
               return (
                 <div key={gen.id} className="bg-white rounded-2xl border border-gray-200 p-5">
