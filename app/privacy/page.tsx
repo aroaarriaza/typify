@@ -14,7 +14,7 @@ export default function PrivacyPage() {
         <div className="space-y-8 text-sm text-gray-700 leading-relaxed">
           <section>
             <h2 className="font-semibold text-gray-900 mb-2">1. Responsable del tratamiento</h2>
-            <p>Typify es responsable del tratamiento de tus datos personales. Puedes contactarnos en <a href="mailto:hola@typify.app" className="text-indigo-600 hover:underline">hola@typify.app</a>.</p>
+            <p>Typify es responsable del tratamiento de tus datos personales. Puedes contactarnos en <a href="mailto:aroa@visualvol.com" className="text-indigo-600 hover:underline">aroa@visualvol.com</a>.</p>
           </section>
 
           <section>
@@ -55,7 +55,7 @@ export default function PrivacyPage() {
 
           <section>
             <h2 className="font-semibold text-gray-900 mb-2">6. Tus derechos</h2>
-            <p>Tienes derecho a acceder, rectificar, suprimir, oponerte al tratamiento y solicitar la portabilidad de tus datos. Para ejercerlos, escríbenos a <a href="mailto:hola@typify.app" className="text-indigo-600 hover:underline">hola@typify.app</a>. Responderemos en un plazo máximo de 30 días.</p>
+            <p>Tienes derecho a acceder, rectificar, suprimir, oponerte al tratamiento y solicitar la portabilidad de tus datos. Para ejercerlos, escríbenos a <a href="mailto:aroa@visualvol.com" className="text-indigo-600 hover:underline">aroa@visualvol.com</a>. Responderemos en un plazo máximo de 30 días.</p>
           </section>
 
           <section>
