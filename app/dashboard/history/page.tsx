@@ -34,7 +34,8 @@ export default async function HistoryPage() {
         ) : (
           <div className="space-y-3">
             {generations.map((gen) => {
-              const result = JSON.parse(gen.result ?? '{}')
+              let result: Record<string, unknown> = {}
+              try { result = JSON.parse(gen.result ?? '{}') } catch { result = {} }
               return (
                 <div key={gen.id} className="bg-white rounded-2xl border border-gray-200 p-5">
                   <div className="flex items-start justify-between gap-4 mb-3">
