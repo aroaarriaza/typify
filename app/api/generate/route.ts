@@ -6,14 +6,16 @@ import { deductCredit } from '@/lib/credits'
 
 const groq = createGroq({ apiKey: process.env.GROQ_API_KEY })
 
-const listingSchema = z.object({
-  title: z.string().describe('Título atractivo del producto (máx 60 caracteres)'),
-  description: z.string().describe('Descripción de venta persuasiva (150-200 palabras)'),
-  metaTitle: z.string().describe('Meta-título SEO (máx 60 caracteres)'),
-  metaDescription: z.string().describe('Meta-descripción SEO (máx 155 caracteres)'),
-  keywords: z.array(z.string()).describe('5-8 palabras clave SEO relevantes'),
-  bulletPoints: z.array(z.string()).describe('4-5 puntos clave del producto'),
-})
+function buildSchema(lang: string) {
+  return z.object({
+    title: z.string().describe(`Attractive product title in ${lang} (max 60 characters)`),
+    description: z.string().describe(`Persuasive sales description in ${lang} (150-200 words)`),
+    metaTitle: z.string().describe(`SEO meta-title in ${lang} (max 60 characters)`),
+    metaDescription: z.string().describe(`SEO meta-description in ${lang} (max 155 characters)`),
+    keywords: z.array(z.string()).describe(`5-8 relevant SEO keywords in ${lang}`),
+    bulletPoints: z.array(z.string()).describe(`4-5 key product bullet points in ${lang}`),
+  })
+}
 
 export async function POST(req: Request) {
   const supabase = await createClient()
@@ -49,7 +51,7 @@ export async function POST(req: Request) {
   try {
     const { object } = await generateObject({
       model: groq('meta-llama/llama-4-scout-17b-16e-instruct'),
-      schema: listingSchema,
+      schema: buildSchema(outputLanguage),
       prompt: `Eres un experto en copywriting para e-commerce. Genera un listing completo para el siguiente producto.
 
 PRODUCTO
