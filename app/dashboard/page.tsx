@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { getProfile } from '@/lib/credits'
-import Generator from './components/Generator'
+import GeneratorShell from './components/GeneratorShell'
 
 export default async function DashboardPage() {
   const supabase = await createClient()
@@ -11,13 +11,11 @@ export default async function DashboardPage() {
   const credits = profile?.credits ?? 0
   const plan = profile?.plan ?? 'free'
   const maxCredits = plan === 'pro' ? 100 : 10
-  const pct = Math.min((credits / maxCredits) * 100, 100)
   const initial = (user?.email?.[0] ?? 'U').toUpperCase()
 
   return (
     <div className="min-h-screen aurora-bg" style={{background: 'linear-gradient(160deg, #f8f7ff 0%, #fafafa 50%, #f0f0ff 100%)'}}>
 
-      {/* Header */}
       <header className="glass border-b border-white/60 px-4 sm:px-6 py-3 flex items-center justify-between sticky top-0 z-50">
         <span className="text-base font-bold gradient-text">Typify</span>
         <Link href="/dashboard/profile" className="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-violet-500 flex items-center justify-center shadow-sm hover:opacity-90 transition-opacity">
@@ -25,44 +23,8 @@ export default async function DashboardPage() {
         </Link>
       </header>
 
-      <main className="max-w-2xl mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-4 sm:space-y-5">
-
-        {/* Tarjeta de créditos */}
-        <div className="animate-fade-up glass rounded-2xl shadow-sm shadow-indigo-100/50 p-5 border border-white/80">
-          <div className="flex items-center justify-between mb-3">
-            <div>
-              <p className="text-xs text-gray-400 uppercase tracking-wider mb-1">Créditos disponibles</p>
-              <p className="text-3xl font-bold text-gray-900">
-                {credits}
-                <span className="text-sm font-normal text-gray-400"> / {maxCredits}</span>
-              </p>
-            </div>
-            <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
-              plan === 'pro'
-                ? 'bg-gradient-to-r from-indigo-500 to-violet-500 text-white'
-                : 'bg-gray-100 text-gray-500'
-            }`}>
-              {plan === 'pro' ? '✦ Pro' : 'Gratis'}
-            </span>
-          </div>
-
-          {/* Barra de progreso animada */}
-          <div className="w-full bg-gray-100 rounded-full h-1.5 overflow-hidden">
-            <div
-              className={`h-1.5 rounded-full transition-all duration-700 ease-out ${
-                credits <= 2 ? 'bg-red-400' : 'bg-gradient-to-r from-indigo-500 to-violet-500'
-              }`}
-              style={{ width: `${pct}%` }}
-            />
-          </div>
-        </div>
-
-        {/* Generador */}
-        <div className="animate-fade-up delay-100 glass rounded-2xl shadow-sm shadow-indigo-100/50 p-5 sm:p-6 border border-white/80">
-          <h2 className="text-sm font-semibold text-gray-800 mb-4">Generar listing</h2>
-          <Generator credits={credits} />
-        </div>
-
+      <main className="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
+        <GeneratorShell credits={credits} plan={plan} maxCredits={maxCredits} />
       </main>
     </div>
   )
