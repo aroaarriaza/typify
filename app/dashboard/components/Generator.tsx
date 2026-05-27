@@ -42,7 +42,7 @@ export default function Generator({ credits }: { credits: number }) {
     if (!res.ok) {
       const msg = await res.text()
       if (res.status === 402) router.push('/upgrade')
-      else setError(msg || 'Error al generar el listing')
+      else setError(`Error ${res.status}: ${msg}`)
       setLoading(false)
       return
     }

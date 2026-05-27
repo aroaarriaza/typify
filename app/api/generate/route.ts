@@ -46,12 +46,14 @@ Genera todos los campos del listing de forma persuasiva, optimizada para SEO y o
     })
 
     return Response.json(object)
-  } catch {
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err)
+    console.error('[generate]', message)
     const { data: profile } = await supabase
       .from('profiles').select('credits').eq('id', user.id).single()
     if (profile) {
       await supabase.from('profiles').update({ credits: profile.credits + 1 }).eq('id', user.id)
     }
-    return new Response('Error al generar el listing', { status: 500 })
+    return new Response(message, { status: 500 })
   }
 }
