@@ -1,6 +1,10 @@
 import Link from 'next/link'
 import ParticleCanvas from './components/ParticleCanvas'
 import ScrambleText from './components/ScrambleText'
+import ScrambleOnScroll from './components/ScrambleOnScroll'
+import AnimatedCounter from './components/AnimatedCounter'
+import Marquee from './components/Marquee'
+import RevealOnScroll from './components/RevealOnScroll'
 
 export default function HomePage() {
   return (
@@ -96,16 +100,21 @@ export default function HomePage() {
         <div className="hero-fade-bottom" />
       </section>
 
-      {/* Stats */}
-      <section className="py-10 px-5 border-y border-gray-100 bg-gray-50/50">
-        <div className="max-w-3xl mx-auto flex flex-wrap justify-center gap-8 sm:gap-16">
+      {/* Marquee */}
+      <Marquee />
+
+      {/* Stats — contadores animados */}
+      <section className="py-12 px-5 border-b border-gray-100 bg-white">
+        <div className="max-w-3xl mx-auto flex flex-wrap justify-center gap-10 sm:gap-20">
           {[
             { value: '10 seg', label: 'Tiempo de generación' },
             { value: '6 campos', label: 'Por cada listing' },
             { value: '100%', label: 'Optimizado para SEO' },
           ].map(({ value, label }) => (
             <div key={label} className="text-center">
-              <p className="text-2xl font-bold gradient-text">{value}</p>
+              <p className="text-2xl font-bold gradient-text">
+                <AnimatedCounter value={value} />
+              </p>
               <p className="text-xs text-gray-500 mt-1">{label}</p>
             </div>
           ))}
@@ -114,69 +123,90 @@ export default function HomePage() {
 
       {/* Bento features */}
       <section className="py-24 px-5 max-w-5xl mx-auto">
-        <div className="text-center mb-14">
+        <RevealOnScroll className="text-center mb-14" from="bottom">
           <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
-            Todo lo que necesita tu{' '}<span className="gradient-text">listing</span>
+            <ScrambleOnScroll text="Todo lo que necesita tu " />
+            <span className="gradient-text">listing</span>
           </h2>
           <p className="text-gray-500 max-w-md mx-auto">Cada campo generado con precisión para maximizar la conversión y el posicionamiento.</p>
-        </div>
+        </RevealOnScroll>
 
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-          {/* Card grande */}
-          <div className="col-span-2 sm:col-span-2 card-hover bg-gradient-to-br from-indigo-50 to-violet-50 border border-indigo-100 rounded-2xl p-6">
-            <div className="text-3xl mb-3">✦</div>
-            <h3 className="font-semibold text-gray-900 text-lg mb-2">Descripción persuasiva</h3>
-            <p className="text-sm text-gray-500 leading-relaxed">150-200 palabras orientadas a la conversión, con storytelling y beneficios del producto que conectan con el comprador.</p>
-          </div>
+          <RevealOnScroll className="col-span-2 sm:col-span-2" from="left" delay={0}>
+            <div className="card-hover bg-gradient-to-br from-indigo-50 to-violet-50 border border-indigo-100 rounded-2xl p-6 h-full">
+              <div className="text-3xl mb-3">✦</div>
+              <h3 className="font-semibold text-gray-900 text-lg mb-2">Descripción persuasiva</h3>
+              <p className="text-sm text-gray-500 leading-relaxed">150-200 palabras orientadas a la conversión, con storytelling y beneficios del producto que conectan con el comprador.</p>
+            </div>
+          </RevealOnScroll>
 
-          <div className="card-hover bg-white border border-gray-100 rounded-2xl p-6 shadow-sm">
-            <div className="text-3xl mb-3">◈</div>
-            <h3 className="font-semibold text-gray-900 mb-1">Título SEO</h3>
-            <p className="text-xs text-gray-500">Máx. 60 caracteres, optimizado para CTR.</p>
-          </div>
+          <RevealOnScroll from="right" delay={100}>
+            <div className="card-hover bg-white border border-gray-100 rounded-2xl p-6 shadow-sm h-full">
+              <div className="text-3xl mb-3">◈</div>
+              <h3 className="font-semibold text-gray-900 mb-1">Título SEO</h3>
+              <p className="text-xs text-gray-500">Máx. 60 caracteres, optimizado para CTR.</p>
+            </div>
+          </RevealOnScroll>
 
-          <div className="card-hover bg-white border border-gray-100 rounded-2xl p-6 shadow-sm">
-            <div className="text-3xl mb-3">◉</div>
-            <h3 className="font-semibold text-gray-900 mb-1">Meta-descripción</h3>
-            <p className="text-xs text-gray-500">155 caracteres perfectos para Google Shopping.</p>
-          </div>
+          <RevealOnScroll from="left" delay={150}>
+            <div className="card-hover bg-white border border-gray-100 rounded-2xl p-6 shadow-sm h-full">
+              <div className="text-3xl mb-3">◉</div>
+              <h3 className="font-semibold text-gray-900 mb-1">Meta-descripción</h3>
+              <p className="text-xs text-gray-500">155 caracteres perfectos para Google Shopping.</p>
+            </div>
+          </RevealOnScroll>
 
-          <div className="card-hover bg-white border border-gray-100 rounded-2xl p-6 shadow-sm">
-            <div className="text-3xl mb-3">◎</div>
-            <h3 className="font-semibold text-gray-900 mb-1">Keywords</h3>
-            <p className="text-xs text-gray-500">5-8 palabras clave relevantes para tu categoría.</p>
-          </div>
+          <RevealOnScroll from="bottom" delay={200}>
+            <div className="card-hover bg-white border border-gray-100 rounded-2xl p-6 shadow-sm h-full">
+              <div className="text-3xl mb-3">◎</div>
+              <h3 className="font-semibold text-gray-900 mb-1">Keywords</h3>
+              <p className="text-xs text-gray-500">5-8 palabras clave relevantes para tu categoría.</p>
+            </div>
+          </RevealOnScroll>
 
-          <div className="col-span-2 sm:col-span-1 card-hover bg-gradient-to-br from-violet-50 to-purple-50 border border-violet-100 rounded-2xl p-6">
-            <div className="text-3xl mb-3">⊕</div>
-            <h3 className="font-semibold text-gray-900 mb-1">Bullet points</h3>
-            <p className="text-xs text-gray-500">4-5 puntos clave escaneables que destacan lo mejor.</p>
-          </div>
+          <RevealOnScroll className="col-span-2 sm:col-span-1" from="right" delay={250}>
+            <div className="card-hover bg-gradient-to-br from-violet-50 to-purple-50 border border-violet-100 rounded-2xl p-6 h-full">
+              <div className="text-3xl mb-3">⊕</div>
+              <h3 className="font-semibold text-gray-900 mb-1">Bullet points</h3>
+              <p className="text-xs text-gray-500">4-5 puntos clave escaneables que destacan lo mejor.</p>
+            </div>
+          </RevealOnScroll>
         </div>
       </section>
+
+      {/* Marquee 2 — invertido */}
+      <div className="marquee-outer">
+        <div className="marquee-track" style={{animationDirection: 'reverse', animationDuration: '22s'}}>
+          {['TÍTULO', 'DESCRIPCIÓN', 'META-TÍTULO', 'META-DESCRIPCIÓN', 'KEYWORDS', 'BULLET POINTS', 'SEO', 'CONVERSIÓN', 'TÍTULO', 'DESCRIPCIÓN', 'META-TÍTULO', 'META-DESCRIPCIÓN', 'KEYWORDS', 'BULLET POINTS', 'SEO', 'CONVERSIÓN'].map((item, i) => (
+            <span key={i} className="marquee-item">{item}&nbsp;<span className="marquee-dot">·</span>&nbsp;</span>
+          ))}
+        </div>
+      </div>
 
       {/* Cómo funciona */}
       <section className="py-24 px-5 bg-gray-50/60 aurora-bg">
         <div className="relative z-10 max-w-3xl mx-auto text-center">
-          <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-16">
-            Tres pasos,{' '}
-            <span className="gradient-text">un listing completo</span>
-          </h2>
+          <RevealOnScroll from="bottom">
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-16">
+              <ScrambleOnScroll text="Tres pasos, " />
+              <span className="gradient-text">un listing completo</span>
+            </h2>
+          </RevealOnScroll>
 
           <div className="grid sm:grid-cols-3 gap-8 relative">
             <div className="hidden sm:block absolute top-8 left-1/4 right-1/4 h-px bg-gradient-to-r from-indigo-200 via-violet-200 to-indigo-200" />
             {[
-              { n: '01', title: 'Describe tu producto', desc: 'Nombre, categoría y características principales.' },
-              { n: '02', title: 'La IA lo genera', desc: 'En segundos, todos los campos listos para copiar.' },
-              { n: '03', title: 'Copia y publica', desc: 'Un clic por campo o cópialo todo de una vez.' },
-            ].map(({ n, title, desc }) => (
-              <div key={n} className="relative">
+              { n: '01', title: 'Describe tu producto', desc: 'Nombre, categoría y características principales.', from: 'left' as const, delay: 0 },
+              { n: '02', title: 'La IA lo genera', desc: 'En segundos, todos los campos listos para copiar.', from: 'bottom' as const, delay: 150 },
+              { n: '03', title: 'Copia y publica', desc: 'Un clic por campo o cópialo todo de una vez.', from: 'right' as const, delay: 300 },
+            ].map(({ n, title, desc, from, delay }) => (
+              <RevealOnScroll key={n} from={from} delay={delay}>
                 <div className="w-14 h-14 mx-auto mb-4 rounded-2xl bg-white border border-indigo-100 shadow-sm flex items-center justify-center card-hover">
                   <span className="shimmer-text text-sm font-bold">{n}</span>
                 </div>
                 <h3 className="font-semibold text-gray-900 mb-2">{title}</h3>
                 <p className="text-sm text-gray-500">{desc}</p>
-              </div>
+              </RevealOnScroll>
             ))}
           </div>
         </div>
