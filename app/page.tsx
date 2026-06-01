@@ -1,16 +1,18 @@
 import Link from 'next/link'
+import ParticleCanvas from './components/ParticleCanvas'
+import ScrambleText from './components/ScrambleText'
 
 export default function HomePage() {
   return (
     <div className="min-h-screen bg-white">
 
-      {/* Nav glassmorphism */}
-      <nav className="fixed top-0 left-0 right-0 z-50 glass border-b border-white/60">
+      {/* Nav — glassmorphism oscuro sobre hero */}
+      <nav className="fixed top-0 left-0 right-0 z-50 border-b border-white/10" style={{background: 'rgba(8,2,21,0.7)', backdropFilter: 'blur(20px)'}}>
         <div className="flex items-center justify-between px-5 sm:px-8 py-3.5 max-w-5xl mx-auto">
           <span className="text-lg font-bold gradient-text">Typify</span>
           <div className="flex items-center gap-3 sm:gap-5">
-            <Link href="/pricing" className="hidden sm:block text-sm text-gray-500 hover:text-gray-900 transition-colors">Planes</Link>
-            <Link href="/login" className="hidden sm:block text-sm text-gray-500 hover:text-gray-900 transition-colors">Iniciar sesión</Link>
+            <Link href="/pricing" className="hidden sm:block text-sm text-white/60 hover:text-white transition-colors">Planes</Link>
+            <Link href="/login" className="hidden sm:block text-sm text-white/60 hover:text-white transition-colors">Iniciar sesión</Link>
             <Link href="/register" className="glow-btn bg-indigo-600 text-white text-sm px-4 py-2 rounded-xl hover:bg-indigo-700 transition-colors font-medium">
               Empezar gratis
             </Link>
@@ -18,21 +20,30 @@ export default function HomePage() {
         </div>
       </nav>
 
-      {/* Hero */}
-      <section className="aurora-bg pt-32 pb-24 px-5 text-center relative">
+      {/* Hero — dark */}
+      <section className="hero-dark pt-32 pb-32 px-5 text-center">
+        {/* Blobs morfantes */}
+        <div className="hero-blob1" />
+        <div className="hero-blob2" />
+        <div className="hero-blob3" />
+        {/* Canvas partículas */}
+        <ParticleCanvas />
+        {/* Beam de luz */}
+        <div className="hero-beam" />
+
         <div className="relative z-10 max-w-3xl mx-auto">
-          <div className="animate-fade-up inline-flex items-center gap-2 bg-indigo-50 border border-indigo-100 text-indigo-700 text-xs font-medium px-4 py-1.5 rounded-full mb-8">
-            <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-pulse inline-block" />
+          <div className="animate-fade-up inline-flex items-center gap-2 bg-white/8 border border-white/15 text-indigo-300 text-xs font-medium px-4 py-1.5 rounded-full mb-8 backdrop-blur-sm">
+            <span className="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-pulse inline-block" />
             Potenciado por Llama 4 · IA de última generación
           </div>
 
-          <h1 className="animate-fade-up delay-100 text-4xl sm:text-6xl font-bold text-gray-900 leading-[1.1] tracking-tight mb-6">
+          <h1 className="animate-fade-up delay-100 text-4xl sm:text-6xl font-bold leading-[1.1] tracking-tight mb-6 text-white">
             Listings que{' '}
-            <span className="gradient-text">convierten</span>
+            <ScrambleText text="convierten" className="gradient-text" delay={600} />
             <br />generados en segundos
           </h1>
 
-          <p className="animate-fade-up delay-200 text-lg text-gray-500 mb-10 max-w-xl mx-auto leading-relaxed">
+          <p className="animate-fade-up delay-200 text-lg text-white/55 mb-10 max-w-xl mx-auto leading-relaxed">
             Título, descripción, SEO, keywords y bullet points optimizados para tu producto. Sin bloqueos creativos.
           </p>
 
@@ -40,49 +51,49 @@ export default function HomePage() {
             <Link href="/register" className="glow-btn bg-indigo-600 text-white px-7 py-3.5 rounded-xl font-semibold hover:bg-indigo-700 transition-colors">
               Crear cuenta gratis
             </Link>
-            <Link href="/pricing" className="border border-gray-200 text-gray-700 px-7 py-3.5 rounded-xl font-medium hover:bg-gray-50 transition-colors">
+            <Link href="/pricing" className="border border-white/20 text-white/80 px-7 py-3.5 rounded-xl font-medium hover:bg-white/10 transition-colors backdrop-blur-sm">
               Ver planes →
             </Link>
           </div>
 
-          <p className="animate-fade-up delay-400 text-xs text-gray-400 mt-5">Sin tarjeta de crédito · 10 generaciones gratis</p>
+          <p className="animate-fade-up delay-400 text-xs text-white/30 mt-5">Sin tarjeta de crédito · 10 generaciones gratis</p>
         </div>
 
         {/* 3 metric cards staggered */}
         <div className="relative z-10 mt-16 h-52 sm:h-56 max-w-2xl mx-auto">
 
-          {/* Card izquierda — tiempo */}
-          <div className="animate-float-slow absolute left-0 top-6 w-40 sm:w-44 glass rounded-2xl shadow-lg shadow-indigo-100 p-4 text-left border border-indigo-50 -rotate-2">
+          <div className="animate-float-slow absolute left-0 top-6 w-40 sm:w-44 glass-dark rounded-2xl shadow-lg shadow-black/40 p-4 text-left border border-white/15 -rotate-2">
             <p className="text-xs text-indigo-400 font-semibold uppercase tracking-wide mb-2">Generación</p>
-            <p className="text-3xl font-bold text-gray-900">~8<span className="text-base font-normal text-gray-400">s</span></p>
-            <p className="text-xs text-gray-400 mt-1">listing completo</p>
+            <p className="text-3xl font-bold text-white">~8<span className="text-base font-normal text-white/40">s</span></p>
+            <p className="text-xs text-white/40 mt-1">listing completo</p>
           </div>
 
-          {/* Card centro — campos generados (más grande) */}
-          <div className="animate-float absolute left-1/2 -translate-x-1/2 -top-2 w-48 sm:w-52 glass rounded-2xl shadow-xl shadow-violet-100 p-4 text-left border border-violet-50 z-10">
-            <p className="text-xs text-violet-500 font-semibold uppercase tracking-wide mb-3">Campos generados</p>
+          <div className="animate-float absolute left-1/2 -translate-x-1/2 -top-2 w-48 sm:w-52 glass-dark rounded-2xl shadow-xl shadow-black/50 p-4 text-left border border-white/15 z-10">
+            <p className="text-xs text-violet-400 font-semibold uppercase tracking-wide mb-3">Campos generados</p>
             <div className="space-y-1.5">
               {['Título SEO', 'Descripción', 'Meta-título', 'Meta-descripción', 'Keywords', 'Bullet points'].map(f => (
                 <div key={f} className="flex items-center gap-2">
                   <span className="w-4 h-4 rounded-full bg-gradient-to-br from-indigo-500 to-violet-500 flex items-center justify-center shrink-0">
                     <span className="text-white" style={{fontSize: '8px'}}>✓</span>
                   </span>
-                  <span className="text-xs text-gray-600">{f}</span>
+                  <span className="text-xs text-white/70">{f}</span>
                 </div>
               ))}
             </div>
           </div>
 
-          {/* Card derecha — SEO */}
-          <div className="animate-float delay-300 absolute right-0 top-8 w-40 sm:w-44 glass rounded-2xl shadow-lg shadow-purple-100 p-4 text-left border border-purple-50 rotate-2">
+          <div className="animate-float delay-300 absolute right-0 top-8 w-40 sm:w-44 glass-dark rounded-2xl shadow-lg shadow-black/40 p-4 text-left border border-white/15 rotate-2">
             <p className="text-xs text-purple-400 font-semibold uppercase tracking-wide mb-2">SEO Score</p>
-            <p className="text-3xl font-bold text-gray-900">98<span className="text-base font-normal text-gray-400">/100</span></p>
-            <div className="mt-2 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+            <p className="text-3xl font-bold text-white">98<span className="text-base font-normal text-white/40">/100</span></p>
+            <div className="mt-2 h-1.5 bg-white/10 rounded-full overflow-hidden">
               <div className="h-full rounded-full bg-gradient-to-r from-indigo-500 to-violet-500" style={{width: '98%'}} />
             </div>
           </div>
 
         </div>
+
+        {/* Transición hero→blanco */}
+        <div className="hero-fade-bottom" />
       </section>
 
       {/* Stats */}
