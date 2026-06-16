@@ -20,6 +20,16 @@ export async function POST(req: Request) {
     return new Response('Webhook inválido', { status: 400 })
   }
 
+  // Idempotency: ignorar eventos ya procesados (Stripe puede reenviar el mismo evento)
+  const { error: dupError } = await supabase
+    .from('stripe_events')
+    .insert({ id: event.id })
+
+  if (dupError) {
+    // Clave primaria duplicada = evento ya procesado
+    return new Response('ok')
+  }
+
   switch (event.type) {
     case 'checkout.session.completed': {
       const session = event.data.object as Stripe.Checkout.Session
