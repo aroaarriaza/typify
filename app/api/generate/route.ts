@@ -81,11 +81,7 @@ Genera todos los campos del listing de forma persuasiva, optimizada para SEO y o
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err)
     console.error('[generate]', message)
-    const { data: profile } = await supabase
-      .from('profiles').select('credits').eq('id', user.id).single()
-    if (profile) {
-      await supabase.from('profiles').update({ credits: profile.credits + 1 }).eq('id', user.id)
-    }
+    await supabase.rpc('refund_credit', { uid: user.id })
     return new Response(message, { status: 500 })
   }
 }

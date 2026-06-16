@@ -19,21 +19,9 @@ export async function deductCredit(): Promise<{ ok: boolean; error?: string }> {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return { ok: false, error: 'No autenticado' }
 
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('credits')
-    .eq('id', user.id)
-    .single()
-
-  if (!profile || profile.credits <= 0) {
-    return { ok: false, error: 'Sin créditos disponibles' }
-  }
-
-  const { error } = await supabase
-    .from('profiles')
-    .update({ credits: profile.credits - 1 })
-    .eq('id', user.id)
+  const { data, error } = await supabase.rpc('deduct_credit', { uid: user.id })
 
   if (error) return { ok: false, error: error.message }
+  if (!data) return { ok: false, error: 'Sin créditos disponibles' }
   return { ok: true }
 }
