@@ -8,6 +8,9 @@ interface Particle {
   size: number; opacity: number
 }
 
+const CONNECT_DIST = 110
+const CONNECT_DIST_SQ = CONNECT_DIST * CONNECT_DIST
+
 export default function ParticleCanvas() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const mouse = useRef({ x: -9999, y: -9999 })
@@ -27,7 +30,10 @@ export default function ParticleCanvas() {
     }
 
     function initParticles() {
-      const count = Math.min(90, Math.floor((canvas!.width * canvas!.height) / 8000))
+      // Menos partículas en móvil para ahorrar batería
+      const isMobile = canvas!.width < 768
+      const maxCount = isMobile ? 40 : 90
+      const count = Math.min(maxCount, Math.floor((canvas!.width * canvas!.height) / 8000))
       particles.current = Array.from({ length: count }, () => ({
         x: Math.random() * canvas!.width,
         y: Math.random() * canvas!.height,
@@ -50,8 +56,9 @@ export default function ParticleCanvas() {
       ps.forEach(p => {
         const dx = mx - p.x
         const dy = my - p.y
-        const dist = Math.sqrt(dx * dx + dy * dy)
-        if (dist < 180 && dist > 0) {
+        const distSq = dx * dx + dy * dy
+        if (distSq < 180 * 180 && distSq > 0) {
+          const dist = Math.sqrt(distSq)
           p.vx += (dx / dist) * 0.03
           p.vy += (dy / dist) * 0.03
         }
@@ -70,17 +77,18 @@ export default function ParticleCanvas() {
         ctx!.fill()
       })
 
-      // Connections
+      // Conexiones: comparación con distancia cuadrada evita sqrt en la mayoría de pares
       for (let i = 0; i < ps.length; i++) {
         for (let j = i + 1; j < ps.length; j++) {
           const dx = ps[i].x - ps[j].x
           const dy = ps[i].y - ps[j].y
-          const dist = Math.sqrt(dx * dx + dy * dy)
-          if (dist < 110) {
+          const distSq = dx * dx + dy * dy
+          if (distSq < CONNECT_DIST_SQ) {
+            const dist = Math.sqrt(distSq)
             ctx!.beginPath()
             ctx!.moveTo(ps[i].x, ps[i].y)
             ctx!.lineTo(ps[j].x, ps[j].y)
-            ctx!.strokeStyle = `rgba(160, 130, 255, ${(1 - dist / 110) * 0.25})`
+            ctx!.strokeStyle = `rgba(160, 130, 255, ${(1 - dist / CONNECT_DIST) * 0.25})`
             ctx!.lineWidth = 0.8
             ctx!.stroke()
           }

@@ -9,11 +9,17 @@ export default function TiltCard({ children, className, style }: {
 }) {
   const cardRef = useRef<HTMLDivElement>(null)
   const glareRef = useRef<HTMLDivElement>(null)
+  const rectRef = useRef<DOMRect | null>(null)
+
+  function onEnter() {
+    // Cachear el rect al entrar evita getBoundingClientRect en cada mousemove (reflow)
+    rectRef.current = cardRef.current?.getBoundingClientRect() ?? null
+  }
 
   function onMove(e: React.MouseEvent<HTMLDivElement>) {
     const card = cardRef.current
-    if (!card) return
-    const rect = card.getBoundingClientRect()
+    const rect = rectRef.current
+    if (!card || !rect) return
     const x = e.clientX - rect.left
     const y = e.clientY - rect.top
     const rotX = -((y / rect.height) - 0.5) * 16
@@ -30,6 +36,7 @@ export default function TiltCard({ children, className, style }: {
   function onLeave() {
     const card = cardRef.current
     if (!card) return
+    rectRef.current = null
     card.style.transition = 'transform 0.6s cubic-bezier(0.23,1,0.32,1)'
     card.style.transform = 'perspective(900px) rotateX(0deg) rotateY(0deg) scale(1)'
     if (glareRef.current) glareRef.current.style.background = 'transparent'
@@ -39,6 +46,7 @@ export default function TiltCard({ children, className, style }: {
     <div
       ref={cardRef}
       className={className}
+      onMouseEnter={onEnter}
       onMouseMove={onMove}
       onMouseLeave={onLeave}
       style={{ transformStyle: 'preserve-3d', willChange: 'transform', position: 'relative', ...style }}
