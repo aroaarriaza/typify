@@ -6,6 +6,24 @@ import { deductCredit } from '@/lib/credits'
 
 const groq = createGroq({ apiKey: process.env.GROQ_API_KEY })
 
+// Rate limiting simple: máx 10 requests por usuario por minuto.
+// Funciona dentro de una misma instancia de Fluid Compute.
+const rateLimitMap = new Map<string, { count: number; resetAt: number }>()
+const RATE_LIMIT = 10
+const RATE_WINDOW_MS = 60_000
+
+function checkRateLimit(userId: string): boolean {
+  const now = Date.now()
+  const entry = rateLimitMap.get(userId)
+  if (!entry || now > entry.resetAt) {
+    rateLimitMap.set(userId, { count: 1, resetAt: now + RATE_WINDOW_MS })
+    return true
+  }
+  if (entry.count >= RATE_LIMIT) return false
+  entry.count++
+  return true
+}
+
 function buildSchema(lang: string) {
   return z.object({
     title: z.string().describe(`Attractive product title in ${lang} (max 60 characters)`),
@@ -22,8 +40,13 @@ export async function POST(req: Request) {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return new Response('No autorizado', { status: 401 })
 
+  if (!checkRateLimit(user.id))
+    return new Response('Demasiadas peticiones. Espera un minuto.', { status: 429 })
+
   const { productName, category, features, platform, tone, language } = await req.json()
   if (!productName?.trim()) return new Response('Nombre de producto requerido', { status: 400 })
+  if (productName.length > 200) return new Response('Nombre demasiado largo', { status: 400 })
+  if (features && features.length > 800) return new Response('Características demasiado largas', { status: 400 })
 
   const credit = await deductCredit()
   if (!credit.ok) return new Response(credit.error ?? 'Sin créditos', { status: 402 })

@@ -128,6 +128,7 @@ export default function GeneratorShell({
                 onChange={e => setProductName(e.target.value)}
                 placeholder="Ej: Auriculares inalámbricos con cancelación de ruido"
                 required
+                maxLength={200}
                 disabled={loading || noCredits}
                 className="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:bg-gray-50"
               />
@@ -169,6 +170,7 @@ export default function GeneratorShell({
                 onChange={e => setFeatures(e.target.value)}
                 placeholder="Ej: Batería 30h, Bluetooth 5.0, peso 250g, colores negro y blanco, incluye estuche"
                 rows={3}
+                maxLength={800}
                 disabled={loading || noCredits}
                 className="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none disabled:bg-gray-50"
               />
