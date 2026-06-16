@@ -1,0 +1,32 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(vercel *)",
+      "Bash(supabase *)",
+      "Bash(gh project *)",
+      "Bash(gh issue *)",
+      "Bash(gh label *)",
+      "Bash(gh repo *)",
+      "Bash(npm run *)",
+      "Bash(npm install *)",
+      "Bash(npx playwright *)",
+      "Bash(npx tsx *)",
+      "Bash(node *)",
+      "Bash(kill *)",
+      "Bash(pkill *)",
+      "Bash(curl -s *)",
+      "Bash(curl -X *)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git push *)",
+      "Bash(mkdir -p *)",
+      "Bash(python3 *)",
+      "Bash(until *)",
+      "mcp__claude_ai_Vercel__get_deployment_build_logs",
+      "mcp__claude_ai_Vercel__get_runtime_logs",
+      "mcp__claude_ai_Vercel__list_deployments",
+      "mcp__claude_ai_Vercel__get_deployment",
+      "mcp__claude_ai_Vercel__get_project"
+    ]
+  }
+}

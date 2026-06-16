@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test:e2e": "PLAYWRIGHT_BROWSERS_PATH=/home/aroa_visualvol_com/.cache/ms-playwright playwright test",
+    "test:e2e:ui": "PLAYWRIGHT_BROWSERS_PATH=/home/aroa_visualvol_com/.cache/ms-playwright playwright test --ui"
   },
   "dependencies": {
     "@ai-sdk/groq": "^3.0.39",
@@ -20,6 +22,7 @@
     "stripe": "^22.1.1"
   },
   "devDependencies": {
+    "@playwright/test": "^1.61.0",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
