@@ -2,13 +2,18 @@
 
 import { useEffect, useRef, useState } from 'react'
 
-type Direction = 'left' | 'right' | 'bottom' | 'top'
+type Direction = 'left' | 'right' | 'bottom' | 'top' | 'flip'
 
 const ORIGINS: Record<Direction, string> = {
   left:   'translateX(-50px)',
   right:  'translateX(50px)',
   bottom: 'translateY(50px)',
   top:    'translateY(-30px)',
+  flip:   'perspective(1200px) rotateY(90deg)',
+}
+
+const VISIBLE: Partial<Record<Direction, string>> = {
+  flip: 'perspective(1200px) rotateY(0deg)',
 }
 
 export default function RevealOnScroll({ children, className, delay = 0, from = 'bottom' }: {
@@ -39,8 +44,9 @@ export default function RevealOnScroll({ children, className, delay = 0, from = 
       className={className}
       style={{
         opacity: visible ? 1 : 0,
-        transform: visible ? 'translate(0,0)' : ORIGINS[from],
+        transform: visible ? (VISIBLE[from] ?? 'translate(0,0)') : ORIGINS[from],
         transition: `opacity 0.65s cubic-bezier(0.16,1,0.3,1), transform 0.65s cubic-bezier(0.16,1,0.3,1)`,
+        backfaceVisibility: from === 'flip' ? 'hidden' : undefined,
       }}
     >
       {children}
