@@ -77,7 +77,7 @@ export default function HomePage() {
             <br />generados en segundos
           </h1>
 
-          <p className="animate-fade-up delay-200 text-lg text-white/55 mb-10 max-w-xl mx-auto leading-relaxed">
+          <p className="animate-fade-up delay-200 text-lg text-white/70 mb-10 max-w-xl mx-auto leading-relaxed">
             Título, descripción, SEO, keywords y bullet points optimizados para tu producto. Sin bloqueos creativos.
           </p>
 
@@ -90,7 +90,7 @@ export default function HomePage() {
             </Link>
           </div>
 
-          <p className="animate-fade-up delay-400 text-xs text-white/30 mt-5">Sin tarjeta de crédito · 10 generaciones gratis</p>
+          <p className="animate-fade-up delay-400 text-xs text-white/50 mt-5">Sin tarjeta de crédito · 10 generaciones gratis</p>
         </div>
 
         {/* Transición hero→blanco */}

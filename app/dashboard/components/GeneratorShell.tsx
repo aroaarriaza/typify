@@ -135,10 +135,11 @@ export default function GeneratorShell({
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Plataforma</label>
-              <div className="flex flex-wrap gap-2">
+              <label className="block text-sm font-medium text-gray-700 mb-2" id="platform-label">Plataforma</label>
+              <div className="flex flex-wrap gap-2" role="group" aria-labelledby="platform-label">
                 {PLATFORMS.map(p => (
                   <button key={p} type="button" disabled={loading || noCredits}
+                    aria-pressed={platform === p}
                     onClick={() => setPlatform(platform === p ? '' : p)}
                     className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-colors ${
                       platform === p
@@ -177,10 +178,11 @@ export default function GeneratorShell({
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Tono</label>
-              <div className="flex flex-wrap gap-2">
+              <label className="block text-sm font-medium text-gray-700 mb-2" id="tone-label">Tono</label>
+              <div className="flex flex-wrap gap-2" role="group" aria-labelledby="tone-label">
                 {TONES.map(t => (
                   <button key={t} type="button" disabled={loading || noCredits}
+                    aria-pressed={tone === t}
                     onClick={() => setTone(t)}
                     className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-colors ${
                       tone === t
@@ -205,7 +207,7 @@ export default function GeneratorShell({
             </div>
 
             {error && (
-              <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-4 py-2">{error}</p>
+              <p role="alert" className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-4 py-2">{error}</p>
             )}
 
             {noCredits ? (
