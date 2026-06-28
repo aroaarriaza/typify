@@ -42,9 +42,7 @@ test('onboarding: usa localStorage con clave typify_onboarding_done', () => {
   expect(code).toContain('localStorage.setItem')
 })
 
-test('onboarding: dashboard importa OnboardingModal con dynamic y ssr: false', () => {
+test('onboarding: dashboard importa OnboardingModal', () => {
   const code = readFileSync(resolve(process.cwd(), DASHBOARD_PATH), 'utf-8')
-  expect(code).toContain('dynamic')
   expect(code).toContain('OnboardingModal')
-  expect(code).toContain('ssr: false')
 })

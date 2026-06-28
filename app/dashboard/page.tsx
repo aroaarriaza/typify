@@ -2,9 +2,7 @@ import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { getProfile } from '@/lib/credits'
 import GeneratorShell from './components/GeneratorShell'
-import dynamic from 'next/dynamic'
-
-const OnboardingModal = dynamic(() => import('./components/OnboardingModal'), { ssr: false })
+import OnboardingModal from './components/OnboardingModal'
 
 export default async function DashboardPage() {
   const supabase = await createClient()
