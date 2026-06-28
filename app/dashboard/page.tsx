@@ -2,6 +2,9 @@ import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { getProfile } from '@/lib/credits'
 import GeneratorShell from './components/GeneratorShell'
+import dynamic from 'next/dynamic'
+
+const OnboardingModal = dynamic(() => import('./components/OnboardingModal'), { ssr: false })
 
 export default async function DashboardPage() {
   const supabase = await createClient()
@@ -22,6 +25,8 @@ export default async function DashboardPage() {
           <span className="text-sm font-bold text-white">{initial}</span>
         </Link>
       </header>
+
+      <OnboardingModal />
 
       <main className="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
         <GeneratorShell credits={credits} plan={plan} maxCredits={maxCredits} />
