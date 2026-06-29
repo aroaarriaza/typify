@@ -102,8 +102,9 @@ Responde ÚNICAMENTE con un objeto JSON válido, sin markdown, sin bloques de c�
 }`,
     })
 
-    const raw = text.trim().replace(/^```json\n?/, '').replace(/\n?```$/, '')
-    const object = buildSchema(outputLanguage).parse(JSON.parse(raw))
+    const match = text.match(/\{[\s\S]*\}/)
+    if (!match) throw new Error('El modelo no devolvió JSON válido')
+    const object = buildSchema(outputLanguage).parse(JSON.parse(match[0]))
 
     await supabase.from('generations').insert({
       user_id: user.id,
