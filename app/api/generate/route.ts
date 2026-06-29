@@ -13,6 +13,8 @@ const ALLOWED_MODELS = [
 ] as const
 type AllowedModel = typeof ALLOWED_MODELS[number]
 
+const ALLOWED_LANGUAGES = ['español', 'inglés', 'francés', 'alemán', 'italiano', 'portugués'] as const
+
 // Rate limiting simple: máx 10 requests por usuario por minuto.
 // Funciona dentro de una misma instancia de Fluid Compute.
 const rateLimitMap = new Map<string, { count: number; resetAt: number }>()
@@ -55,7 +57,7 @@ export async function POST(req: Request) {
   if (productName.length > 200) return new Response('Nombre demasiado largo', { status: 400 })
   if (features && features.length > 800) return new Response('Características demasiado largas', { status: 400 })
   if (model && !ALLOWED_MODELS.includes(model)) return new Response('Modelo no permitido', { status: 400 })
-  const selectedModel: AllowedModel = ALLOWED_MODELS.includes(model) ? model : 'meta/llama-4-scout'
+  const selectedModel: AllowedModel = model ? (model as AllowedModel) : 'meta/llama-4-scout'
 
   const credit = await deductCredit()
   if (!credit.ok) return new Response(credit.error ?? 'Sin créditos', { status: 402 })
@@ -78,7 +80,7 @@ export async function POST(req: Request) {
 
   const platformHint = platform && platformInstructions[platform] ? platformInstructions[platform] : ''
   const toneHint = tone && toneInstructions[tone] ? toneInstructions[tone] : toneInstructions['Profesional']
-  const outputLanguage = language || 'español'
+  const outputLanguage = ALLOWED_LANGUAGES.includes(language) ? language : 'español'
 
   try {
     const { text } = await generateText({

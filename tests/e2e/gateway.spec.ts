@@ -15,9 +15,16 @@ test('gateway: endpoint apunta a ai-gateway.vercel.sh', () => {
   expect(code).toContain('ai-gateway.vercel.sh')
 })
 
-test('gateway: modelo es meta/llama-4-scout', () => {
+test('gateway: invoca gateway con selectedModel dinamico', () => {
   const code = readFileSync(resolve(process.cwd(), ROUTE), 'utf-8')
-  expect(code).toContain("gateway('meta/llama-4-scout')")
+  expect(code).toContain('gateway(selectedModel)')
+  expect(code).not.toContain("gateway('meta/llama-4-scout')")
+})
+
+test('gateway: meta/llama-4-scout sigue en la whitelist ALLOWED_MODELS', () => {
+  const code = readFileSync(resolve(process.cwd(), ROUTE), 'utf-8')
+  expect(code).toContain("'meta/llama-4-scout'")
+  expect(code).toContain('ALLOWED_MODELS')
 })
 
 test('gateway: autenticación via VERCEL_API_KEY', () => {
