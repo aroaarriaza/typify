@@ -1,10 +1,10 @@
 import { generateObject } from 'ai'
-import { createGroq } from '@ai-sdk/groq'
+import { createVercel } from '@ai-sdk/vercel'
 import { z } from 'zod'
 import { createClient } from '@/lib/supabase/server'
 import { deductCredit } from '@/lib/credits'
 
-const groq = createGroq({ apiKey: process.env.GROQ_API_KEY })
+const gateway = createVercel({ apiKey: process.env.VERCEL_OIDC_TOKEN })
 
 // Rate limiting simple: máx 10 requests por usuario por minuto.
 // Funciona dentro de una misma instancia de Fluid Compute.
@@ -73,7 +73,7 @@ export async function POST(req: Request) {
 
   try {
     const { object } = await generateObject({
-      model: groq('meta-llama/llama-4-scout-17b-16e-instruct'),
+      model: gateway('groq/meta-llama/llama-4-scout-17b-16e-instruct'),
       schema: buildSchema(outputLanguage),
       prompt: `Eres un experto en copywriting para e-commerce. Genera un listing completo para el siguiente producto.
 

@@ -13,6 +13,7 @@
   "dependencies": {
     "@ai-sdk/groq": "^3.0.39",
     "@ai-sdk/react": "^3.0.193",
+    "@ai-sdk/vercel": "^2.0.56",
     "@supabase/ssr": "^0.10.3",
     "@supabase/supabase-js": "^2.106.2",
     "ai": "^6.0.191",
