@@ -4,7 +4,7 @@ import { z } from 'zod'
 import { createClient } from '@/lib/supabase/server'
 import { deductCredit } from '@/lib/credits'
 
-const gateway = createVercel()
+const gateway = createVercel({ baseURL: 'https://ai-gateway.vercel.sh/v1' })
 
 // Rate limiting simple: máx 10 requests por usuario por minuto.
 // Funciona dentro de una misma instancia de Fluid Compute.
