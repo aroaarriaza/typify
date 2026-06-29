@@ -1,4 +1,4 @@
-import { generateObject } from 'ai'
+import { generateText } from 'ai'
 import { createVercel } from '@ai-sdk/vercel'
 import { z } from 'zod'
 import { createClient } from '@/lib/supabase/server'
@@ -72,10 +72,8 @@ export async function POST(req: Request) {
   const outputLanguage = language || 'español'
 
   try {
-    const { object } = await generateObject({
+    const { text } = await generateText({
       model: gateway('meta/llama-4-scout'),
-      mode: 'tool',
-      schema: buildSchema(outputLanguage),
       prompt: `Eres un experto en copywriting para e-commerce. Genera un listing completo para el siguiente producto.
 
 PRODUCTO
@@ -92,8 +90,20 @@ ${toneHint}
 IDIOMA
 Genera TODO el contenido en ${outputLanguage}. Título, descripción, meta-tags, keywords y bullet points deben estar íntegramente en ${outputLanguage}.
 
-Genera todos los campos del listing de forma persuasiva, optimizada para SEO y orientada a la conversión.`,
+FORMATO DE RESPUESTA
+Responde ÚNICAMENTE con un objeto JSON válido, sin markdown, sin bloques de código, sin texto adicional antes ni después. Usa esta estructura exacta:
+{
+  "title": "título atractivo (máx 60 caracteres)",
+  "description": "descripción persuasiva de 150-200 palabras",
+  "metaTitle": "meta-título SEO (máx 60 caracteres)",
+  "metaDescription": "meta-descripción SEO (máx 155 caracteres)",
+  "keywords": ["keyword1", "keyword2", "keyword3", "keyword4", "keyword5"],
+  "bulletPoints": ["punto1", "punto2", "punto3", "punto4"]
+}`,
     })
+
+    const raw = text.trim().replace(/^```json\n?/, '').replace(/\n?```$/, '')
+    const object = buildSchema(outputLanguage).parse(JSON.parse(raw))
 
     await supabase.from('generations').insert({
       user_id: user.id,
