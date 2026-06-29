@@ -74,6 +74,7 @@ export async function POST(req: Request) {
   try {
     const { object } = await generateObject({
       model: gateway('meta/llama-4-scout'),
+      mode: 'tool',
       schema: buildSchema(outputLanguage),
       prompt: `Eres un experto en copywriting para e-commerce. Genera un listing completo para el siguiente producto.
 
