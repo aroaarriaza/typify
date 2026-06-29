@@ -6,6 +6,13 @@ import { deductCredit } from '@/lib/credits'
 
 const gateway = createVercel({ baseURL: 'https://ai-gateway.vercel.sh/v1' })
 
+const ALLOWED_MODELS = [
+  'meta/llama-4-scout',
+  'meta/llama-4-maverick',
+  'deepseek/deepseek-r1',
+] as const
+type AllowedModel = typeof ALLOWED_MODELS[number]
+
 // Rate limiting simple: máx 10 requests por usuario por minuto.
 // Funciona dentro de una misma instancia de Fluid Compute.
 const rateLimitMap = new Map<string, { count: number; resetAt: number }>()
@@ -43,10 +50,12 @@ export async function POST(req: Request) {
   if (!checkRateLimit(user.id))
     return new Response('Demasiadas peticiones. Espera un minuto.', { status: 429 })
 
-  const { productName, category, features, platform, tone, language } = await req.json()
+  const { productName, category, features, platform, tone, language, model } = await req.json()
   if (!productName?.trim()) return new Response('Nombre de producto requerido', { status: 400 })
   if (productName.length > 200) return new Response('Nombre demasiado largo', { status: 400 })
   if (features && features.length > 800) return new Response('Características demasiado largas', { status: 400 })
+  if (model && !ALLOWED_MODELS.includes(model)) return new Response('Modelo no permitido', { status: 400 })
+  const selectedModel: AllowedModel = ALLOWED_MODELS.includes(model) ? model : 'meta/llama-4-scout'
 
   const credit = await deductCredit()
   if (!credit.ok) return new Response(credit.error ?? 'Sin créditos', { status: 402 })
@@ -73,7 +82,7 @@ export async function POST(req: Request) {
 
   try {
     const { text } = await generateText({
-      model: gateway('meta/llama-4-scout'),
+      model: gateway(selectedModel),
       prompt: `Eres un experto en copywriting para e-commerce. Genera un listing completo para el siguiente producto.
 
 PRODUCTO

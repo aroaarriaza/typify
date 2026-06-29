@@ -27,6 +27,13 @@ const LANGUAGES = [
   { code: 'portugués', label: 'Português' },
 ]
 
+const MODELS = [
+  { id: 'meta/llama-4-scout',    label: 'Rápido',       desc: 'Respuestas instantáneas' },
+  { id: 'meta/llama-4-maverick', label: 'Potente',      desc: 'Mayor calidad'           },
+  { id: 'deepseek/deepseek-r1',  label: 'Razonamiento', desc: 'Pensamiento profundo'    },
+] as const
+type ModelId = typeof MODELS[number]['id']
+
 const EMPTY_FIELDS = ['Título SEO', 'Descripción', 'Meta-título', 'Meta-descripción', 'Keywords', 'Bullet points']
 
 export default function GeneratorShell({
@@ -45,6 +52,7 @@ export default function GeneratorShell({
   const [platform, setPlatform] = useState('')
   const [tone, setTone] = useState('Profesional')
   const [language, setLanguage] = useState('español')
+  const [model, setModel] = useState<ModelId>('meta/llama-4-scout')
   const [listing, setListing] = useState<Listing | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
@@ -59,7 +67,7 @@ export default function GeneratorShell({
     const res = await fetch('/api/generate', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ productName, category, features, platform, tone, language }),
+      body: JSON.stringify({ productName, category, features, platform, tone, language, model }),
     })
 
     if (!res.ok) {
@@ -204,6 +212,33 @@ export default function GeneratorShell({
               >
                 {LANGUAGES.map(l => <option key={l.code} value={l.code}>{l.label}</option>)}
               </select>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2" id="model-label">
+                Modelo de IA
+              </label>
+              <div className="flex flex-wrap gap-2" role="group" aria-labelledby="model-label">
+                {MODELS.map(m => (
+                  <button
+                    key={m.id}
+                    type="button"
+                    disabled={loading || noCredits}
+                    aria-pressed={model === m.id}
+                    onClick={() => setModel(m.id)}
+                    className={`flex flex-col items-start px-3 py-2 rounded-lg text-xs font-medium border transition-colors ${
+                      model === m.id
+                        ? 'bg-indigo-600 border-indigo-600 text-white'
+                        : 'bg-white border-gray-200 text-gray-600 hover:border-indigo-300 hover:text-indigo-600'
+                    } disabled:opacity-50`}
+                  >
+                    <span>{m.label}</span>
+                    <span className={`text-[10px] font-normal mt-0.5 ${
+                      model === m.id ? 'text-indigo-200' : 'text-gray-400'
+                    }`}>{m.desc}</span>
+                  </button>
+                ))}
+              </div>
             </div>
 
             {error && (
