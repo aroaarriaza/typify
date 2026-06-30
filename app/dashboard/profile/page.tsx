@@ -1,20 +1,30 @@
 import Link from 'next/link'
+import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { getProfile } from '@/lib/credits'
 import { logout } from '../../(auth)/actions'
 import PortalButton from './PortalButton'
+import ProfileForm from './ProfileForm'
+import DeleteAccountButton from './DeleteAccountButton'
 
 export default async function ProfilePage() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
+  if (!user) redirect('/login')
   const profile = await getProfile()
 
   const plan = profile?.plan ?? 'free'
   const credits = profile?.credits ?? 0
   const maxCredits = plan === 'pro' ? 100 : 10
   const pct = Math.min((credits / maxCredits) * 100, 100)
-  const initial = (user?.email?.[0] ?? 'U').toUpperCase()
   const isAdmin = user?.email === 'aroaarriaza@gmail.com'
+
+  const meta = user?.user_metadata ?? {}
+  const displayName: string = meta.display_name ?? ''
+  const preferredPlatform: string = meta.preferred_platform ?? ''
+  const preferredTone: string = meta.preferred_tone ?? ''
+  const preferredLanguage: string = meta.preferred_language ?? ''
+  const initial = (displayName?.[0] ?? user?.email?.[0] ?? 'U').toUpperCase()
 
   return (
     <div className="min-h-screen aurora-bg" style={{background: 'linear-gradient(160deg, #f8f7ff 0%, #fafafa 50%, #f0f0ff 100%)'}}>
@@ -29,12 +39,17 @@ export default async function ProfilePage() {
 
       <main className="max-w-lg mx-auto px-4 sm:px-6 py-8 sm:py-12 space-y-4">
 
-        {/* Avatar + nombre */}
+        {/* Avatar + plan */}
         <div className="animate-fade-up glass rounded-2xl shadow-sm shadow-indigo-100/50 p-6 sm:p-8 border border-white/80 text-center">
           <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-br from-indigo-500 to-violet-500 flex items-center justify-center shadow-lg shadow-indigo-200">
             <span className="text-3xl font-bold text-white">{initial}</span>
           </div>
-          <p className="text-base font-semibold text-gray-900 mb-1">{user?.email}</p>
+          <p className="text-base font-semibold text-gray-900 mb-0.5">
+            {displayName || user?.email}
+          </p>
+          {displayName && (
+            <p className="text-xs text-gray-400 mb-2">{user?.email}</p>
+          )}
           <span className={`inline-block px-3 py-1 rounded-full text-xs font-semibold ${
             plan === 'pro'
               ? 'bg-gradient-to-r from-indigo-500 to-violet-500 text-white'
@@ -42,6 +57,17 @@ export default async function ProfilePage() {
           }`}>
             {plan === 'pro' ? '✦ Plan Pro' : 'Plan Gratis'}
           </span>
+        </div>
+
+        {/* Editar perfil + preferencias */}
+        <div className="animate-fade-up delay-75 glass rounded-2xl shadow-sm shadow-indigo-100/50 p-5 border border-white/80">
+          <p className="text-xs text-gray-400 uppercase tracking-wider mb-4">Perfil y preferencias</p>
+          <ProfileForm
+            displayName={displayName}
+            preferredPlatform={preferredPlatform}
+            preferredTone={preferredTone}
+            preferredLanguage={preferredLanguage}
+          />
         </div>
 
         {/* Créditos */}
@@ -65,7 +91,7 @@ export default async function ProfilePage() {
         </div>
 
         {/* Suscripción */}
-        <div className="animate-fade-up delay-200 glass rounded-2xl shadow-sm shadow-indigo-100/50 p-5 border border-white/80 space-y-3">
+        <div className="animate-fade-up delay-150 glass rounded-2xl shadow-sm shadow-indigo-100/50 p-5 border border-white/80 space-y-3">
           <p className="text-xs text-gray-400 uppercase tracking-wider">Suscripción</p>
 
           {plan === 'pro' ? (
@@ -73,7 +99,7 @@ export default async function ProfilePage() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-medium text-gray-900">Plan Pro activo</p>
-                  <p className="text-xs text-gray-400">100 créditos/mes · 9€/mes</p>
+                  <p className="text-xs text-gray-400">100 créditos/mes · <span className="font-medium text-gray-600">9€/mes</span></p>
                 </div>
                 <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
               </div>
@@ -81,9 +107,21 @@ export default async function ProfilePage() {
             </div>
           ) : (
             <div className="space-y-3">
-              <div>
-                <p className="text-sm font-medium text-gray-900">Plan Gratis</p>
-                <p className="text-xs text-gray-400">10 créditos/mes incluidos</p>
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-gray-900">Plan Gratis</p>
+                  <p className="text-xs text-gray-400">10 créditos/mes · <span className="font-medium text-gray-600">0€/mes</span></p>
+                </div>
+                <span className="text-xs text-gray-400 bg-gray-100 px-2 py-0.5 rounded-full">Activo</span>
+              </div>
+              <div className="bg-indigo-50/60 border border-indigo-100 rounded-xl p-3 space-y-1.5">
+                <p className="text-xs font-medium text-indigo-700">Pro — 9€/mes</p>
+                <ul className="text-xs text-indigo-600 space-y-0.5">
+                  <li>✓ 100 créditos/mes</li>
+                  <li>✓ Todos los modelos de IA</li>
+                  <li>✓ Multi-idioma sin límites</li>
+                  <li>✓ Soporte prioritario</li>
+                </ul>
               </div>
               <Link
                 href="/upgrade"
@@ -96,7 +134,7 @@ export default async function ProfilePage() {
         </div>
 
         {/* Acciones */}
-        <div className="animate-fade-up delay-300 glass rounded-2xl shadow-sm shadow-indigo-100/50 border border-white/80 overflow-hidden divide-y divide-gray-100/80">
+        <div className="animate-fade-up delay-200 glass rounded-2xl shadow-sm shadow-indigo-100/50 border border-white/80 overflow-hidden divide-y divide-gray-100/80">
           <Link href="/dashboard/history" className="flex items-center justify-between px-5 py-4 hover:bg-white/40 transition-colors group">
             <div className="flex items-center gap-3">
               <span className="text-base">📋</span>
@@ -125,7 +163,7 @@ export default async function ProfilePage() {
         </div>
 
         {/* Cerrar sesión */}
-        <div className="animate-fade-up delay-400 pb-8">
+        <div className="animate-fade-up delay-300">
           <form action={logout}>
             <button
               type="submit"
@@ -134,6 +172,14 @@ export default async function ProfilePage() {
               Cerrar sesión
             </button>
           </form>
+        </div>
+
+        {/* Zona de peligro */}
+        <div className="animate-fade-up delay-400 pb-8">
+          <div className="border border-red-100 rounded-2xl p-5">
+            <p className="text-xs font-medium text-red-500 uppercase tracking-wider mb-3">Zona de peligro</p>
+            <DeleteAccountButton />
+          </div>
         </div>
 
       </main>
