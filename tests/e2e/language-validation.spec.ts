@@ -15,18 +15,20 @@ test('language-validation: ALLOWED_LANGUAGES whitelist definida', () => {
   expect(code).toContain("'portugués'")
 })
 
-test('language-validation: outputLanguage usa includes con fallback a español', () => {
+test('language-validation: API acepta array de idiomas (languages[])', () => {
   const code = readFileSync(resolve(process.cwd(), ROUTE), 'utf-8')
-  expect(code).toContain("ALLOWED_LANGUAGES.includes(language) ? language : 'español'")
+  expect(code).toContain('languages')
+  expect(code).toContain('Array.isArray(languages)')
 })
 
-test('language-validation: ya no usa language || español directamente', () => {
+test('language-validation: cada idioma validado contra whitelist', () => {
   const code = readFileSync(resolve(process.cwd(), ROUTE), 'utf-8')
-  expect(code).not.toContain("language || 'español'")
+  expect(code).toContain('ALLOWED_LANGUAGES.includes(')
+  expect(code).toContain('selectedLanguages')
 })
 
-test('language-validation: outputLanguage asignado desde ALLOWED_LANGUAGES', () => {
+test('language-validation: límite máximo de 3 idiomas', () => {
   const code = readFileSync(resolve(process.cwd(), ROUTE), 'utf-8')
-  expect(code).toContain('outputLanguage')
-  expect(code).toContain('ALLOWED_LANGUAGES.includes(language)')
+  expect(code).toContain('rawLanguages.length > 3')
+  expect(code).toContain('Máximo 3 idiomas')
 })
