@@ -37,14 +37,11 @@ type ModelId = typeof MODELS[number]['id']
 const EMPTY_FIELDS = ['Título SEO', 'Descripción', 'Meta-título', 'Meta-descripción', 'Keywords', 'Bullet points']
 
 export default function GeneratorShell({
-  credits, plan, maxCredits,
+  credits,
 }: {
   credits: number
-  plan: string
-  maxCredits: number
 }) {
   const router = useRouter()
-  const pct = Math.min((credits / maxCredits) * 100, 100)
 
   const [productName, setProductName] = useState('')
   const [category, setCategory] = useState('')
@@ -91,36 +88,8 @@ export default function GeneratorShell({
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 items-start">
 
-      {/* Columna izquierda — créditos + formulario */}
+      {/* Columna izquierda — formulario */}
       <div className="space-y-4">
-
-        {/* Tarjeta créditos */}
-        <div className="glass rounded-2xl shadow-sm shadow-indigo-100/50 p-5 border border-white/80">
-          <div className="flex items-center justify-between mb-3">
-            <div>
-              <p className="text-xs text-gray-400 uppercase tracking-wider mb-1">Créditos disponibles</p>
-              <p className="text-3xl font-bold text-gray-900">
-                {credits}
-                <span className="text-sm font-normal text-gray-400"> / {maxCredits}</span>
-              </p>
-            </div>
-            <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
-              plan === 'pro'
-                ? 'bg-gradient-to-r from-indigo-500 to-violet-500 text-white'
-                : 'bg-gray-100 text-gray-500'
-            }`}>
-              {plan === 'pro' ? '✦ Pro' : 'Gratis'}
-            </span>
-          </div>
-          <div className="w-full bg-gray-100 rounded-full h-1.5 overflow-hidden">
-            <div
-              className={`h-1.5 rounded-full transition-all duration-700 ease-out ${
-                credits <= 2 ? 'bg-red-400' : 'bg-gradient-to-r from-indigo-500 to-violet-500'
-              }`}
-              style={{ width: `${pct}%` }}
-            />
-          </div>
-        </div>
 
         {/* Formulario */}
         <div className="glass rounded-2xl shadow-sm shadow-indigo-100/50 p-5 border border-white/80">
