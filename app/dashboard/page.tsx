@@ -35,7 +35,7 @@ export default async function DashboardPage() {
 
       <header className="glass border-b border-white/60 px-4 sm:px-6 py-3 flex items-center justify-between sticky top-0 z-50">
         <span className="text-base font-bold gradient-text">Typify</span>
-        <Link href="/dashboard/profile" className="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-violet-500 flex items-center justify-center shadow-sm hover:opacity-90 transition-opacity">
+        <Link href="/dashboard/settings/cuenta" className="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-violet-500 flex items-center justify-center shadow-sm hover:opacity-90 transition-opacity">
           <span className="text-sm font-bold text-white">{initial}</span>
         </Link>
       </header>
