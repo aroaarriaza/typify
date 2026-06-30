@@ -22,8 +22,6 @@ export default async function DashboardPage() {
   ])
 
   const credits = profile?.credits ?? 0
-  const plan = profile?.plan ?? 'free'
-  const maxCredits = plan === 'pro' ? 100 : 10
   const initial = (user.email?.[0] ?? 'U').toUpperCase()
 
   const generations = (rawGenerations ?? []).map(g => {
@@ -45,7 +43,7 @@ export default async function DashboardPage() {
       <OnboardingModal />
 
       <main className="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6">
-        <GeneratorShell credits={credits} plan={plan} maxCredits={maxCredits} />
+        <GeneratorShell credits={credits} />
         <HistorySection generations={generations ?? []} />
       </main>
     </div>
