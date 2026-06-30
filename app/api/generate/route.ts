@@ -14,6 +14,7 @@ const ALLOWED_MODELS = [
 type AllowedModel = typeof ALLOWED_MODELS[number]
 
 const ALLOWED_LANGUAGES = ['español', 'inglés', 'francés', 'alemán', 'italiano', 'portugués'] as const
+type AllowedLanguage = typeof ALLOWED_LANGUAGES[number]
 
 // Rate limiting simple: máx 10 requests por usuario por minuto.
 // Funciona dentro de una misma instancia de Fluid Compute.
@@ -52,12 +53,20 @@ export async function POST(req: Request) {
   if (!checkRateLimit(user.id))
     return new Response('Demasiadas peticiones. Espera un minuto.', { status: 429 })
 
-  const { productName, category, features, platform, tone, language, model } = await req.json()
+  const { productName, category, features, platform, tone, languages, model } = await req.json()
   if (!productName?.trim()) return new Response('Nombre de producto requerido', { status: 400 })
   if (productName.length > 200) return new Response('Nombre demasiado largo', { status: 400 })
   if (features && features.length > 800) return new Response('Características demasiado largas', { status: 400 })
+  if (platform && (typeof platform !== 'string' || platform.length > 100)) return new Response('Plataforma no válida', { status: 400 })
+  if (tone && (typeof tone !== 'string' || tone.length > 100)) return new Response('Tono no válido', { status: 400 })
   if (model && !ALLOWED_MODELS.includes(model)) return new Response('Modelo no permitido', { status: 400 })
   const selectedModel: AllowedModel = model ? (model as AllowedModel) : 'meta/llama-4-scout'
+
+  const rawLanguages: unknown[] = Array.isArray(languages) && languages.length > 0 ? languages : ['español']
+  if (rawLanguages.length > 3) return new Response('Máximo 3 idiomas', { status: 400 })
+  const selectedLanguages: AllowedLanguage[] = rawLanguages
+    .filter((l): l is AllowedLanguage => typeof l === 'string' && ALLOWED_LANGUAGES.includes(l as AllowedLanguage))
+  if (selectedLanguages.length === 0) return new Response('Idiomas no válidos', { status: 400 })
 
   const credit = await deductCredit()
   if (!credit.ok) return new Response(credit.error ?? 'Sin créditos', { status: 402 })
@@ -80,12 +89,9 @@ export async function POST(req: Request) {
 
   const platformHint = platform && platformInstructions[platform] ? platformInstructions[platform] : ''
   const toneHint = tone && toneInstructions[tone] ? toneInstructions[tone] : toneInstructions['Profesional']
-  const outputLanguage = ALLOWED_LANGUAGES.includes(language) ? language : 'español'
 
-  try {
-    const { text } = await generateText({
-      model: gateway(selectedModel),
-      prompt: `Eres un experto en copywriting para e-commerce. Genera un listing completo para el siguiente producto.
+  function buildPrompt(lang: AllowedLanguage) {
+    return `Eres un experto en copywriting para e-commerce. Genera un listing completo para el siguiente producto.
 
 PRODUCTO
 Nombre: ${productName}
@@ -99,7 +105,7 @@ TONO
 ${toneHint}
 
 IDIOMA
-Genera TODO el contenido en ${outputLanguage}. Título, descripción, meta-tags, keywords y bullet points deben estar íntegramente en ${outputLanguage}.
+Genera TODO el contenido en ${lang}. Título, descripción, meta-tags, keywords y bullet points deben estar íntegramente en ${lang}.
 
 FORMATO DE RESPUESTA
 Responde ÚNICAMENTE con un objeto JSON válido, sin markdown, sin bloques de código, sin texto adicional antes ni después. Usa esta estructura exacta:
@@ -110,12 +116,21 @@ Responde ÚNICAMENTE con un objeto JSON válido, sin markdown, sin bloques de c�
   "metaDescription": "meta-descripción SEO (máx 155 caracteres)",
   "keywords": ["keyword1", "keyword2", "keyword3", "keyword4", "keyword5"],
   "bulletPoints": ["punto1", "punto2", "punto3", "punto4"]
-}`,
-    })
+}`
+  }
 
-    const match = text.match(/\{[\s\S]*\}/)
-    if (!match) throw new Error('El modelo no devolvió JSON válido')
-    const object = buildSchema(outputLanguage).parse(JSON.parse(match[0]))
+  try {
+    const results = await Promise.all(
+      selectedLanguages.map(async (lang) => {
+        const { text } = await generateText({ model: gateway(selectedModel), prompt: buildPrompt(lang) })
+        const match = text.match(/\{[\s\S]*\}/)
+        if (!match) throw new Error(`El modelo no devolvió JSON válido para ${lang}`)
+        const listing = buildSchema(lang).parse(JSON.parse(match[0]))
+        return [lang, listing] as const
+      })
+    )
+
+    const object = Object.fromEntries(results)
 
     await supabase.from('generations').insert({
       user_id: user.id,
@@ -125,9 +140,9 @@ Responde ÚNICAMENTE con un objeto JSON válido, sin markdown, sin bloques de c�
 
     return Response.json(object)
   } catch (err) {
-    const message = err instanceof Error ? err.message : String(err)
-    console.error('[generate]', message)
-    await supabase.rpc('refund_credit', { uid: user.id })
-    return new Response(message, { status: 500 })
+    console.error('[generate]', err instanceof Error ? err.message : String(err))
+    const { error: refundErr } = await supabase.rpc('refund_credit', { uid: user.id })
+    if (refundErr) console.error('[generate] refund failed', refundErr.message)
+    return new Response('Error al generar. Inténtalo de nuevo.', { status: 500 })
   }
 }

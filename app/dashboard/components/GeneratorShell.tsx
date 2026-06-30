@@ -12,6 +12,8 @@ type Listing = {
   bulletPoints: string[]
 }
 
+type MultiListing = Record<string, Listing>
+
 const CATEGORIES = [
   'Moda y ropa', 'Electrónica', 'Hogar y jardín', 'Deportes',
   'Belleza y cuidado', 'Juguetes', 'Alimentación', 'Mascotas', 'Otro',
@@ -28,9 +30,9 @@ const LANGUAGES = [
 ]
 
 const MODELS = [
-  { id: 'meta/llama-4-scout',      label: 'Llama Scout',   desc: 'Respuestas instantáneas' },
-  { id: 'meta/llama-4-maverick',   label: 'Llama Maverick', desc: 'Mayor calidad'          },
-  { id: 'google/gemini-2.5-flash', label: 'Gemini',         desc: 'Google AI'              },
+  { id: 'meta/llama-4-scout',      label: 'Llama Scout',    desc: 'Respuestas instantáneas' },
+  { id: 'meta/llama-4-maverick',   label: 'Llama Maverick', desc: 'Mayor calidad'           },
+  { id: 'google/gemini-2.5-flash', label: 'Gemini',         desc: 'Google AI'               },
 ] as const
 type ModelId = typeof MODELS[number]['id']
 
@@ -48,23 +50,33 @@ export default function GeneratorShell({
   const [features, setFeatures] = useState('')
   const [platform, setPlatform] = useState('')
   const [tone, setTone] = useState('Profesional')
-  const [language, setLanguage] = useState('español')
+  const [languages, setLanguages] = useState<string[]>(['español'])
   const [model, setModel] = useState<ModelId>('meta/llama-4-scout')
-  const [listing, setListing] = useState<Listing | null>(null)
+  const [result, setResult] = useState<MultiListing | null>(null)
+  const [activeTab, setActiveTab] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const noCredits = credits <= 0
+
+  function toggleLanguage(code: string) {
+    setLanguages(prev => {
+      if (prev.includes(code)) {
+        return prev.length > 1 ? prev.filter(l => l !== code) : prev
+      }
+      return prev.length < 3 ? [...prev, code] : prev
+    })
+  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     setLoading(true)
     setError('')
-    setListing(null)
+    setResult(null)
 
     const res = await fetch('/api/generate', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ productName, category, features, platform, tone, language, model }),
+      body: JSON.stringify({ productName, category, features, platform, tone, languages, model }),
     })
 
     if (!res.ok) {
@@ -75,8 +87,9 @@ export default function GeneratorShell({
       return
     }
 
-    const data = await res.json()
-    setListing(data)
+    const data: MultiListing = await res.json()
+    setResult(data)
+    setActiveTab(Object.keys(data)[0] ?? '')
     setLoading(false)
     router.refresh()
   }
@@ -84,6 +97,13 @@ export default function GeneratorShell({
   function copy(text: string) {
     navigator.clipboard.writeText(text)
   }
+
+  function copyAll(listing: Listing) {
+    copy(`TÍTULO\n${listing.title}\n\nDESCRIPCIÓN\n${listing.description}\n\nMETA-TÍTULO\n${listing.metaTitle}\n\nMETA-DESCRIPCIÓN\n${listing.metaDescription}\n\nPUNTOS CLAVE\n${listing.bulletPoints.map(b => `• ${b}`).join('\n')}\n\nPALABRAS CLAVE\n${listing.keywords.join(', ')}`)
+  }
+
+  const activeListing = result ? result[activeTab] : null
+  const resultTabs = result ? Object.keys(result) : []
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 items-start">
@@ -172,15 +192,28 @@ export default function GeneratorShell({
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Idioma de salida</label>
-              <select
-                value={language}
-                onChange={e => setLanguage(e.target.value)}
-                disabled={loading || noCredits}
-                className="w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:bg-gray-50 bg-white"
-              >
-                {LANGUAGES.map(l => <option key={l.code} value={l.code}>{l.label}</option>)}
-              </select>
+              <div className="flex items-center justify-between mb-2">
+                <label className="block text-sm font-medium text-gray-700" id="language-label">
+                  Idiomas de salida
+                </label>
+                <span className="text-[10px] text-gray-400">{languages.length}/3 seleccionados</span>
+              </div>
+              <div className="flex flex-wrap gap-2" role="group" aria-labelledby="language-label">
+                {LANGUAGES.map(l => (
+                  <button
+                    key={l.code}
+                    type="button"
+                    disabled={loading || noCredits || (!languages.includes(l.code) && languages.length >= 3)}
+                    aria-pressed={languages.includes(l.code)}
+                    onClick={() => toggleLanguage(l.code)}
+                    className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-colors ${
+                      languages.includes(l.code)
+                        ? 'bg-indigo-600 border-indigo-600 text-white'
+                        : 'bg-white border-gray-200 text-gray-600 hover:border-indigo-300 hover:text-indigo-600'
+                    } disabled:opacity-40`}
+                  >{l.label}</button>
+                ))}
+              </div>
             </div>
 
             <div>
@@ -230,9 +263,9 @@ export default function GeneratorShell({
                 {loading ? (
                   <span className="flex items-center justify-center gap-2">
                     <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                    Generando listing...
+                    Generando listing{languages.length > 1 ? `s en ${languages.length} idiomas` : ''}...
                   </span>
-                ) : 'Generar listing completo — 1 crédito'}
+                ) : `Generar listing${languages.length > 1 ? ` en ${languages.length} idiomas` : ''} — 1 crédito`}
               </button>
             )}
           </form>
@@ -244,34 +277,59 @@ export default function GeneratorShell({
         {loading ? (
           <div className="glass rounded-2xl shadow-sm shadow-indigo-100/50 border border-white/80 p-8 flex flex-col items-center justify-center min-h-[400px] gap-4">
             <div className="w-10 h-10 border-[3px] border-indigo-200 border-t-indigo-600 rounded-full animate-spin" />
-            <p className="text-sm text-gray-400">Generando tu listing...</p>
+            <p className="text-sm text-gray-400">
+              {languages.length > 1
+                ? `Generando en ${languages.length} idiomas en paralelo...`
+                : 'Generando tu listing...'}
+            </p>
           </div>
-        ) : listing ? (
+        ) : result && activeListing ? (
           <div className="glass rounded-2xl shadow-sm shadow-indigo-100/50 border border-white/80 p-5 space-y-3 animate-fade-up">
             <div className="flex items-center justify-between mb-1">
               <h3 className="text-sm font-semibold text-gray-900">Listing generado</h3>
               <button
-                onClick={() => copy(
-                  `TÍTULO\n${listing.title}\n\nDESCRIPCIÓN\n${listing.description}\n\nMETA-TÍTULO\n${listing.metaTitle}\n\nMETA-DESCRIPCIÓN\n${listing.metaDescription}\n\nPUNTOS CLAVE\n${listing.bulletPoints.map(b => `• ${b}`).join('\n')}\n\nPALABRAS CLAVE\n${listing.keywords.join(', ')}`
-                )}
+                onClick={() => copyAll(activeListing)}
                 className="text-xs text-indigo-600 hover:underline font-medium"
               >
                 Copiar todo
               </button>
             </div>
 
-            <Field label="Título" value={listing.title} onCopy={() => copy(listing.title)} />
-            <Field label="Descripción" value={listing.description} onCopy={() => copy(listing.description)} multiline />
-            <Field label="Meta-título SEO" value={listing.metaTitle} onCopy={() => copy(listing.metaTitle)} />
-            <Field label="Meta-descripción SEO" value={listing.metaDescription} onCopy={() => copy(listing.metaDescription)} />
+            {resultTabs.length > 1 && (
+              <div className="flex gap-1 border-b border-gray-100 pb-2" role="tablist">
+                {resultTabs.map(lang => {
+                  const langLabel = LANGUAGES.find(l => l.code === lang)?.label ?? lang
+                  return (
+                    <button
+                      key={lang}
+                      role="tab"
+                      aria-selected={activeTab === lang}
+                      onClick={() => setActiveTab(lang)}
+                      className={`px-3 py-1 rounded-t-lg text-xs font-medium transition-colors capitalize ${
+                        activeTab === lang
+                          ? 'bg-indigo-600 text-white'
+                          : 'text-gray-500 hover:text-indigo-600'
+                      }`}
+                    >
+                      {langLabel}
+                    </button>
+                  )
+                })}
+              </div>
+            )}
+
+            <Field label="Título" value={activeListing.title} onCopy={() => copy(activeListing.title)} />
+            <Field label="Descripción" value={activeListing.description} onCopy={() => copy(activeListing.description)} multiline />
+            <Field label="Meta-título SEO" value={activeListing.metaTitle} onCopy={() => copy(activeListing.metaTitle)} />
+            <Field label="Meta-descripción SEO" value={activeListing.metaDescription} onCopy={() => copy(activeListing.metaDescription)} />
 
             <div className="bg-gray-50/80 border border-gray-200 rounded-xl p-4">
               <div className="flex justify-between items-center mb-2">
                 <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">Puntos clave</span>
-                <button onClick={() => copy(listing.bulletPoints.map(b => `• ${b}`).join('\n'))} className="text-xs text-indigo-600 hover:underline">Copiar</button>
+                <button onClick={() => copy(activeListing.bulletPoints.map(b => `• ${b}`).join('\n'))} className="text-xs text-indigo-600 hover:underline">Copiar</button>
               </div>
               <ul className="space-y-1">
-                {listing.bulletPoints.map((point, i) => (
+                {activeListing.bulletPoints.map((point, i) => (
                   <li key={i} className="text-sm text-gray-700 flex gap-2"><span className="text-indigo-400">•</span>{point}</li>
                 ))}
               </ul>
@@ -280,10 +338,10 @@ export default function GeneratorShell({
             <div className="bg-gray-50/80 border border-gray-200 rounded-xl p-4">
               <div className="flex justify-between items-center mb-2">
                 <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">Palabras clave SEO</span>
-                <button onClick={() => copy(listing.keywords.join(', '))} className="text-xs text-indigo-600 hover:underline">Copiar</button>
+                <button onClick={() => copy(activeListing.keywords.join(', '))} className="text-xs text-indigo-600 hover:underline">Copiar</button>
               </div>
               <div className="flex flex-wrap gap-2">
-                {listing.keywords.map((kw, i) => (
+                {activeListing.keywords.map((kw, i) => (
                   <span key={i} className="bg-indigo-50 text-indigo-700 text-xs px-2.5 py-1 rounded-full">{kw}</span>
                 ))}
               </div>
