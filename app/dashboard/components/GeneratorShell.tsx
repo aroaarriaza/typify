@@ -196,14 +196,16 @@ export default function GeneratorShell({
                 <label className="block text-sm font-medium text-gray-700" id="language-label">
                   Idiomas de salida
                 </label>
-                <span className="text-[10px] text-gray-400">{languages.length}/3 seleccionados</span>
+                {languages.length > 1 && (
+                  <span className="text-[10px] text-indigo-500">{languages.length} seleccionados</span>
+                )}
               </div>
               <div className="flex flex-wrap gap-2" role="group" aria-labelledby="language-label">
                 {LANGUAGES.map(l => (
                   <button
                     key={l.code}
                     type="button"
-                    disabled={loading || noCredits || (!languages.includes(l.code) && languages.length >= 3)}
+                    disabled={loading || noCredits}
                     aria-pressed={languages.includes(l.code)}
                     onClick={() => toggleLanguage(l.code)}
                     className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-colors ${

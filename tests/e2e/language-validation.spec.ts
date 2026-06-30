@@ -27,8 +27,8 @@ test('language-validation: cada idioma validado contra whitelist', () => {
   expect(code).toContain('selectedLanguages')
 })
 
-test('language-validation: límite máximo de 3 idiomas', () => {
+test('language-validation: idiomas deduplicados para evitar llamadas duplicadas al gateway', () => {
   const code = readFileSync(resolve(process.cwd(), ROUTE), 'utf-8')
-  expect(code).toContain('rawLanguages.length > 3')
-  expect(code).toContain('Máximo 3 idiomas')
+  expect(code).toContain('new Set(')
+  expect(code).toContain('selectedLanguages')
 })

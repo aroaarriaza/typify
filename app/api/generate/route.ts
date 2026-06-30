@@ -63,9 +63,9 @@ export async function POST(req: Request) {
   const selectedModel: AllowedModel = model ? (model as AllowedModel) : 'meta/llama-4-scout'
 
   const rawLanguages: unknown[] = Array.isArray(languages) && languages.length > 0 ? languages : ['español']
-  if (rawLanguages.length > 3) return new Response('Máximo 3 idiomas', { status: 400 })
-  const selectedLanguages: AllowedLanguage[] = rawLanguages
-    .filter((l): l is AllowedLanguage => typeof l === 'string' && ALLOWED_LANGUAGES.includes(l as AllowedLanguage))
+  const selectedLanguages: AllowedLanguage[] = [...new Set(
+    rawLanguages.filter((l): l is AllowedLanguage => typeof l === 'string' && ALLOWED_LANGUAGES.includes(l as AllowedLanguage))
+  )]
   if (selectedLanguages.length === 0) return new Response('Idiomas no válidos', { status: 400 })
 
   const credit = await deductCredit()
