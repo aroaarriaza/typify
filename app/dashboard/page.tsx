@@ -1,18 +1,36 @@
 import Link from 'next/link'
+import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { getProfile } from '@/lib/credits'
 import GeneratorShell from './components/GeneratorShell'
 import OnboardingModal from './components/OnboardingModal'
+import HistorySection from './components/HistorySection'
 
 export default async function DashboardPage() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
-  const profile = await getProfile()
+  if (!user) redirect('/login')
+
+  const [profile, { data: rawGenerations }] = await Promise.all([
+    getProfile(),
+    supabase
+      .from('generations')
+      .select('id, prompt, result, created_at')
+      .eq('user_id', user.id)
+      .order('created_at', { ascending: false })
+      .limit(20),
+  ])
 
   const credits = profile?.credits ?? 0
   const plan = profile?.plan ?? 'free'
   const maxCredits = plan === 'pro' ? 100 : 10
-  const initial = (user?.email?.[0] ?? 'U').toUpperCase()
+  const initial = (user.email?.[0] ?? 'U').toUpperCase()
+
+  const generations = (rawGenerations ?? []).map(g => {
+    let listing = {}
+    try { listing = JSON.parse(g.result) } catch { /* keep empty */ }
+    return { id: g.id, prompt: g.prompt, created_at: g.created_at, listing }
+  })
 
   return (
     <div className="min-h-screen aurora-bg" style={{background: 'linear-gradient(160deg, #f8f7ff 0%, #fafafa 50%, #f0f0ff 100%)'}}>
@@ -26,8 +44,9 @@ export default async function DashboardPage() {
 
       <OnboardingModal />
 
-      <main className="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
+      <main className="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6">
         <GeneratorShell credits={credits} plan={plan} maxCredits={maxCredits} />
+        <HistorySection generations={generations ?? []} />
       </main>
     </div>
   )
