@@ -12,7 +12,7 @@ test('model-selector: constante MODELS definida con 3 modelos', () => {
   expect(code).toContain('const MODELS = [')
   expect(code).toContain("'meta/llama-4-scout'")
   expect(code).toContain("'meta/llama-4-maverick'")
-  expect(code).toContain("'google/gemini-2.0-flash'")
+  expect(code).toContain("'google/gemini-2.5-flash'")
 })
 
 test('model-selector: estado inicial es meta/llama-4-scout', () => {
@@ -46,7 +46,7 @@ test('model-selector: ALLOWED_MODELS whitelist en route.ts', () => {
   expect(code).toContain('const ALLOWED_MODELS = [')
   expect(code).toContain("'meta/llama-4-scout'")
   expect(code).toContain("'meta/llama-4-maverick'")
-  expect(code).toContain("'google/gemini-2.0-flash'")
+  expect(code).toContain("'google/gemini-2.5-flash'")
 })
 
 test('model-selector: gateway usa selectedModel dinamico', () => {

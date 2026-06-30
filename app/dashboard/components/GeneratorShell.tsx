@@ -30,7 +30,7 @@ const LANGUAGES = [
 const MODELS = [
   { id: 'meta/llama-4-scout',    label: 'Rápido',       desc: 'Respuestas instantáneas' },
   { id: 'meta/llama-4-maverick', label: 'Potente',      desc: 'Mayor calidad'           },
-  { id: 'google/gemini-2.0-flash', label: 'Gemini',        desc: 'Google AI'              },
+  { id: 'google/gemini-2.5-flash', label: 'Gemini',        desc: 'Google AI'              },
 ] as const
 type ModelId = typeof MODELS[number]['id']
 

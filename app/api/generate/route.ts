@@ -9,7 +9,7 @@ const gateway = createVercel({ baseURL: 'https://ai-gateway.vercel.sh/v1' })
 const ALLOWED_MODELS = [
   'meta/llama-4-scout',
   'meta/llama-4-maverick',
-  'google/gemini-2.0-flash',
+  'google/gemini-2.5-flash',
 ] as const
 type AllowedModel = typeof ALLOWED_MODELS[number]
 
