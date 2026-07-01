@@ -2,9 +2,8 @@ import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { logout } from '@/app/(auth)/actions'
-import AccountForm from './AccountForm'
 import AvatarUpload from './AvatarUpload'
-import EmailForm from './EmailForm'
+import CuentaFields from './CuentaFields'
 
 export default async function CuentaPage() {
   const supabase = await createClient()
@@ -19,26 +18,16 @@ export default async function CuentaPage() {
 
   return (
     <div className="space-y-3">
-      {/* Perfil — avatar + nombre */}
+      {/* Perfil */}
       <section className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
         <div className="px-6 py-4 border-b border-gray-50">
           <h2 className="text-sm font-semibold text-gray-900">Perfil</h2>
         </div>
-        <div className="px-6 py-5 border-b border-gray-50">
+        <div className="px-6 pt-5 pb-2">
           <AvatarUpload avatarUrl={avatarUrl} initial={initial} />
         </div>
-        <div className="px-6 py-5">
-          <AccountForm displayName={displayName} />
-        </div>
-      </section>
-
-      {/* Email */}
-      <section className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-        <div className="px-6 py-4 border-b border-gray-50">
-          <h2 className="text-sm font-semibold text-gray-900">Correo electrónico</h2>
-        </div>
-        <div className="px-6 py-5">
-          <EmailForm currentEmail={user.email ?? ''} />
+        <div className="px-6">
+          <CuentaFields displayName={displayName} email={user.email ?? ''} />
         </div>
       </section>
 
@@ -47,17 +36,6 @@ export default async function CuentaPage() {
         <div className="px-6 py-4">
           <h2 className="text-sm font-semibold text-gray-900">Acciones</h2>
         </div>
-
-        <Link
-          href="/forgot-password"
-          className="flex items-center justify-between px-6 py-4 hover:bg-gray-50 transition-colors group"
-        >
-          <div>
-            <p className="text-sm text-gray-700">Cambiar contraseña</p>
-            <p className="text-xs text-gray-400 mt-0.5">Te enviaremos un enlace por email</p>
-          </div>
-          <span className="text-gray-300 group-hover:text-gray-400 text-sm transition-colors">→</span>
-        </Link>
 
         <Link
           href="/dashboard/history"
