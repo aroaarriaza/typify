@@ -365,7 +365,7 @@ export default function GeneratorShell({
             </div>
 
             {/* Feature list */}
-            <div className="flex-1 px-5 py-5 space-y-4">
+            <div className="flex-1 px-5 py-5 flex flex-col justify-evenly">
               {([
                 { icon: '📌', label: 'Título SEO', example: 'Auriculares Bluetooth Pro — Cancelación de ruido activa, 30h', pill: 'bg-amber-50 border-amber-100 text-amber-600' },
                 { icon: '📝', label: 'Descripción persuasiva', example: 'Sumérgete en el sonido con nuestros auriculares de última generación...', pill: 'bg-blue-50 border-blue-100 text-blue-600' },
