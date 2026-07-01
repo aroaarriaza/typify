@@ -102,6 +102,43 @@ export async function updateProfile(prevState: AuthState, formData: FormData): P
   return { success: 'Perfil actualizado.' }
 }
 
+export async function updateDisplayName(prevState: AuthState, formData: FormData): Promise<AuthState> {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { error: 'No autenticado.' }
+
+  const display_name = (formData.get('display_name') as string)?.trim().slice(0, 60) ?? ''
+
+  const { error } = await supabase.auth.updateUser({ data: { display_name } })
+  if (error) return { error: error.message }
+  revalidatePath('/dashboard/settings/cuenta')
+  return { success: 'Nombre actualizado.' }
+}
+
+export async function updatePreferences(prevState: AuthState, formData: FormData): Promise<AuthState> {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { error: 'No autenticado.' }
+
+  const preferred_platform = formData.get('preferred_platform') as string
+  const preferred_tone = formData.get('preferred_tone') as string
+  const preferred_language = formData.get('preferred_language') as string
+
+  if (!ALLOWED_PLATFORMS.includes(preferred_platform as typeof ALLOWED_PLATFORMS[number]))
+    return { error: 'Plataforma no válida.' }
+  if (!ALLOWED_TONES.includes(preferred_tone as typeof ALLOWED_TONES[number]))
+    return { error: 'Tono no válido.' }
+  if (!ALLOWED_PREF_LANGUAGES.includes(preferred_language as typeof ALLOWED_PREF_LANGUAGES[number]))
+    return { error: 'Idioma no válido.' }
+
+  const { error } = await supabase.auth.updateUser({
+    data: { preferred_platform, preferred_tone, preferred_language },
+  })
+  if (error) return { error: error.message }
+  revalidatePath('/dashboard/settings/preferencias')
+  return { success: 'Preferencias actualizadas.' }
+}
+
 export async function deleteAccount(): Promise<void> {
   const { createClient: createServiceClient } = await import('@supabase/supabase-js')
   const supabase = await createClient()
