@@ -104,7 +104,7 @@ export default function GeneratorShell({
   const resultTabs = result ? Object.keys(result) : []
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 items-start">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
 
       {/* Columna izquierda — formulario */}
       <div className="space-y-4">
@@ -258,7 +258,7 @@ export default function GeneratorShell({
               <button
                 type="submit"
                 disabled={loading || !productName.trim()}
-                className="w-full bg-indigo-600 text-white rounded-xl py-3 text-sm font-medium hover:bg-indigo-700 transition-colors disabled:opacity-50"
+                className="w-full bg-gradient-to-r from-indigo-600 to-violet-600 text-white rounded-xl py-3 text-sm font-semibold hover:from-indigo-700 hover:to-violet-700 transition-all disabled:opacity-50 shadow-sm shadow-indigo-200 glow-btn"
               >
                 {loading ? (
                   <span className="flex items-center justify-center gap-2">
@@ -273,7 +273,7 @@ export default function GeneratorShell({
       </div>
 
       {/* Columna derecha — resultado */}
-      <div className="lg:sticky lg:top-20">
+      <div className={loading || result ? 'lg:sticky lg:top-20' : 'flex flex-col'}>
         {loading ? (
           <div className="glass rounded-2xl shadow-sm shadow-indigo-100/50 border border-white/80 p-8 flex flex-col items-center justify-center min-h-[400px] gap-4">
             <div className="w-10 h-10 border-[3px] border-indigo-200 border-t-indigo-600 rounded-full animate-spin" />
@@ -348,40 +348,52 @@ export default function GeneratorShell({
             </div>
           </div>
         ) : (
-          <div className="glass rounded-2xl shadow-sm shadow-indigo-100/50 border border-white/80 overflow-hidden">
-            <div className="px-5 pt-5 pb-4 border-b border-gray-50">
-              <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-violet-500 flex items-center justify-center shadow-sm shrink-0">
-                  <span className="text-sm">✦</span>
+          <div className="flex-1 flex flex-col glass rounded-2xl shadow-sm shadow-indigo-100/50 border border-white/80 overflow-hidden animate-fade-in">
+            {/* Gradient header */}
+            <div className="relative overflow-hidden bg-gradient-to-br from-indigo-600 via-violet-600 to-purple-600 px-5 py-5">
+              <div className="absolute -top-6 -right-6 w-28 h-28 bg-white/10 rounded-full blur-2xl pointer-events-none" />
+              <div className="absolute bottom-0 left-0 w-20 h-20 bg-violet-400/20 rounded-full blur-xl pointer-events-none" />
+              <div className="relative flex items-center gap-3">
+                <div className="w-9 h-9 rounded-xl bg-white/20 backdrop-blur-sm border border-white/30 flex items-center justify-center shrink-0">
+                  <span className="text-white text-base">✦</span>
                 </div>
                 <div>
-                  <p className="text-sm font-semibold text-gray-900">Typify genera por ti</p>
-                  <p className="text-xs text-gray-400">Un listing completo y optimizado para SEO</p>
+                  <p className="text-sm font-semibold text-white">Typify genera por ti</p>
+                  <p className="text-xs text-white/65 mt-0.5">Listing completo y optimizado para SEO</p>
                 </div>
               </div>
             </div>
 
-            <div className="px-5 py-4 space-y-3">
-              {[
-                { icon: '📌', label: 'Título SEO', example: 'Auriculares Bluetooth Pro — Cancelación de ruido activa, 30h batería' },
-                { icon: '📝', label: 'Descripción', example: 'Sumérgete en el sonido con nuestros auriculares de última generación. Tecnología ANC avanzada...' },
-                { icon: '🔍', label: 'Meta-título y descripción', example: 'Optimizados para posicionar en Google y marketplaces' },
-                { icon: '✦', label: 'Puntos clave del producto', example: '5 bullet points persuasivos listos para Amazon o Etsy' },
-                { icon: '🏷', label: 'Keywords SEO', example: 'auriculares bluetooth, noise cancelling, auriculares inalámbricos...' },
-              ].map(item => (
-                <div key={item.label} className="flex gap-3 items-start">
-                  <span className="text-base leading-none mt-0.5 shrink-0">{item.icon}</span>
+            {/* Feature list */}
+            <div className="flex-1 px-5 py-5 space-y-4">
+              {([
+                { icon: '📌', label: 'Título SEO', example: 'Auriculares Bluetooth Pro — Cancelación de ruido activa, 30h', pill: 'bg-amber-50 border-amber-100 text-amber-600' },
+                { icon: '📝', label: 'Descripción persuasiva', example: 'Sumérgete en el sonido con nuestros auriculares de última generación...', pill: 'bg-blue-50 border-blue-100 text-blue-600' },
+                { icon: '🔍', label: 'Meta título + descripción', example: 'Optimizados para posicionar en Google y marketplaces', pill: 'bg-indigo-50 border-indigo-100 text-indigo-600' },
+                { icon: '✦', label: 'Puntos clave', example: '5 bullet points persuasivos para Amazon o Etsy', pill: 'bg-violet-50 border-violet-100 text-violet-600' },
+                { icon: '🏷', label: 'Keywords SEO', example: 'auriculares bluetooth, noise cancelling, inalámbricos...', pill: 'bg-rose-50 border-rose-100 text-rose-600' },
+              ] as const).map((item, i) => (
+                <div
+                  key={item.label}
+                  className="flex gap-3 items-start animate-fade-up"
+                  style={{ animationDelay: `${i * 70}ms`, animationFillMode: 'both' }}
+                >
+                  <span className={`inline-flex items-center justify-center w-7 h-7 rounded-lg border text-xs shrink-0 ${item.pill}`}>
+                    {item.icon}
+                  </span>
                   <div className="min-w-0">
-                    <p className="text-xs font-semibold text-gray-700">{item.label}</p>
+                    <p className="text-xs font-semibold text-gray-800">{item.label}</p>
                     <p className="text-[11px] text-gray-400 mt-0.5 leading-relaxed">{item.example}</p>
                   </div>
                 </div>
               ))}
             </div>
 
-            <div className="px-5 py-4 bg-gradient-to-br from-indigo-50/50 to-violet-50/50 border-t border-indigo-50">
-              <p className="text-xs text-indigo-500 text-center">
-                Rellena el formulario y pulsa <span className="font-semibold">Generar listing</span>
+            {/* Footer CTA */}
+            <div className="px-5 py-3.5 bg-gradient-to-r from-indigo-50/60 to-violet-50/60 border-t border-indigo-100/60">
+              <p className="text-[11px] text-center text-gray-400">
+                Rellena el formulario →{' '}
+                <span className="text-indigo-600 font-semibold">Generar listing</span>
               </p>
             </div>
           </div>

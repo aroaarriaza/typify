@@ -59,10 +59,14 @@ export default async function DashboardPage() {
       <main className="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6">
         {/* Stats row */}
         <div className="grid grid-cols-3 gap-2 sm:gap-3">
-          <div className="glass rounded-2xl border border-white/80 shadow-sm shadow-indigo-100/40 px-4 py-3.5">
-            <p className="text-[11px] text-gray-400 font-medium uppercase tracking-wide mb-1">Créditos</p>
-            <div className="flex items-end gap-1.5 mb-1.5">
-              <span className="text-2xl font-bold text-gray-900 leading-none">{credits}</span>
+          {/* Créditos */}
+          <div className="glass rounded-2xl border border-white/80 shadow-sm shadow-indigo-100/40 px-4 py-3.5 animate-fade-up">
+            <div className="flex items-center gap-1.5 mb-2">
+              <span aria-hidden="true" className="w-5 h-5 rounded-md bg-gradient-to-br from-indigo-500 to-violet-500 flex items-center justify-center text-[10px] text-white font-bold shrink-0">✦</span>
+              <p className="text-[11px] text-gray-400 font-medium uppercase tracking-wide">Créditos</p>
+            </div>
+            <div className="flex items-end gap-1 mb-1.5">
+              <span className={`text-2xl font-bold leading-none ${credits <= 2 ? 'text-red-500' : 'text-gray-900'}`}>{credits}</span>
               <span className="text-xs text-gray-400 pb-0.5">/ {maxCredits}</span>
             </div>
             <div className="w-full bg-gray-100 rounded-full h-1 overflow-hidden">
@@ -73,25 +77,33 @@ export default async function DashboardPage() {
             </div>
           </div>
 
-          <div className="glass rounded-2xl border border-white/80 shadow-sm shadow-indigo-100/40 px-4 py-3.5">
-            <p className="text-[11px] text-gray-400 font-medium uppercase tracking-wide mb-1">Listings</p>
+          {/* Listings */}
+          <div className="glass rounded-2xl border border-white/80 shadow-sm shadow-indigo-100/40 px-4 py-3.5 animate-fade-up delay-100">
+            <div className="flex items-center gap-1.5 mb-2">
+              <span aria-hidden="true" className="w-5 h-5 rounded-md bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center text-[10px] text-white shrink-0">📋</span>
+              <p className="text-[11px] text-gray-400 font-medium uppercase tracking-wide">Listings</p>
+            </div>
             <span className="text-2xl font-bold text-gray-900 leading-none">{totalGenerations ?? 0}</span>
-            <p className="text-[11px] text-gray-400 mt-1">generados en total</p>
+            <p className="text-[11px] text-gray-400 mt-1">generados</p>
           </div>
 
-          <div className="glass rounded-2xl border border-white/80 shadow-sm shadow-indigo-100/40 px-4 py-3.5">
-            <p className="text-[11px] text-gray-400 font-medium uppercase tracking-wide mb-1">Plan</p>
+          {/* Plan */}
+          <div className="glass rounded-2xl border border-white/80 shadow-sm shadow-indigo-100/40 px-4 py-3.5 animate-fade-up delay-200">
+            <div className="flex items-center gap-1.5 mb-2">
+              <span aria-hidden="true" className="w-5 h-5 rounded-md bg-gradient-to-br from-amber-400 to-orange-400 flex items-center justify-center text-[10px] text-white shrink-0">⚡</span>
+              <p className="text-[11px] text-gray-400 font-medium uppercase tracking-wide">Plan</p>
+            </div>
             {plan === 'pro' ? (
-              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-gradient-to-r from-indigo-500 to-violet-500 text-white mt-1">
+              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-gradient-to-r from-indigo-500 to-violet-500 text-white">
                 ✦ Pro
               </span>
             ) : (
-              <div>
-                <span className="text-sm font-medium text-gray-500">Gratis</span>
-                <Link href="/upgrade" className="block text-[11px] text-indigo-500 hover:text-indigo-600 mt-1 transition-colors">
+              <>
+                <span className="text-sm font-medium text-gray-600">Gratis</span>
+                <Link href="/upgrade" className="block text-[11px] text-indigo-500 hover:text-indigo-600 mt-0.5 transition-colors">
                   Actualizar →
                 </Link>
-              </div>
+              </>
             )}
           </div>
         </div>
