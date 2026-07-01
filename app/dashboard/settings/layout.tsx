@@ -17,14 +17,14 @@ export default async function SettingsLayout({ children }: { children: React.Rea
         </Link>
       </header>
 
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
-        <div className="mb-8 px-1">
+      <main className="max-w-6xl mx-auto px-4 sm:px-8 py-6 sm:py-10">
+        <div className="mb-6">
           <h1 className="text-xl font-semibold text-gray-900">Configuración</h1>
           <p className="text-sm text-gray-400 mt-0.5">Gestiona tu cuenta y preferencias</p>
         </div>
 
-        <div className="flex flex-col lg:flex-row gap-8">
-          <aside className="lg:w-44 shrink-0">
+        <div className="flex flex-col lg:flex-row gap-6">
+          <aside className="lg:w-56 shrink-0">
             <SettingsSidebar />
           </aside>
           <div className="flex-1 min-w-0">
