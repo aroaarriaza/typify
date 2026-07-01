@@ -115,6 +115,22 @@ export async function updateDisplayName(prevState: AuthState, formData: FormData
   return { success: 'Nombre actualizado.' }
 }
 
+export async function updateEmail(prevState: AuthState, formData: FormData): Promise<AuthState> {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { error: 'No autenticado.' }
+
+  const email = (formData.get('email') as string)?.trim().toLowerCase()
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
+    return { error: 'Introduce un email válido.' }
+  if (email === user.email)
+    return { error: 'Ya usas ese email.' }
+
+  const { error } = await supabase.auth.updateUser({ email })
+  if (error) return { error: error.message }
+  return { success: 'Te hemos enviado un enlace de confirmación a ambas direcciones. Acepta el cambio desde el nuevo email.' }
+}
+
 export async function updatePreferences(prevState: AuthState, formData: FormData): Promise<AuthState> {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()

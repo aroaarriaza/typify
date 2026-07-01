@@ -36,8 +36,6 @@ const MODELS = [
 ] as const
 type ModelId = typeof MODELS[number]['id']
 
-const EMPTY_FIELDS = ['Título SEO', 'Descripción', 'Meta-título', 'Meta-descripción', 'Keywords', 'Bullet points']
-
 export default function GeneratorShell({
   credits,
 }: {
@@ -63,7 +61,7 @@ export default function GeneratorShell({
       if (prev.includes(code)) {
         return prev.length > 1 ? prev.filter(l => l !== code) : prev
       }
-      return prev.length < 3 ? [...prev, code] : prev
+      return [...prev, code]
     })
   }
 
@@ -350,18 +348,41 @@ export default function GeneratorShell({
             </div>
           </div>
         ) : (
-          <div className="glass rounded-2xl shadow-sm shadow-indigo-100/50 border border-white/80 p-8 flex flex-col items-center justify-center min-h-[400px]">
-            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-indigo-50 to-violet-50 border border-indigo-100 flex items-center justify-center mb-5">
-              <span className="text-2xl">✦</span>
+          <div className="glass rounded-2xl shadow-sm shadow-indigo-100/50 border border-white/80 overflow-hidden">
+            <div className="px-5 pt-5 pb-4 border-b border-gray-50">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-violet-500 flex items-center justify-center shadow-sm shrink-0">
+                  <span className="text-sm">✦</span>
+                </div>
+                <div>
+                  <p className="text-sm font-semibold text-gray-900">Typify genera por ti</p>
+                  <p className="text-xs text-gray-400">Un listing completo y optimizado para SEO</p>
+                </div>
+              </div>
             </div>
-            <p className="text-sm font-medium text-gray-700 mb-1">Tu listing aparecerá aquí</p>
-            <p className="text-xs text-gray-400 text-center max-w-[200px]">Rellena el formulario y pulsa generar</p>
-            <div className="mt-8 space-y-2 w-full max-w-xs">
-              {EMPTY_FIELDS.map(f => (
-                <div key={f} className="h-8 rounded-lg bg-gray-100/80 animate-pulse flex items-center px-3">
-                  <span className="text-xs text-gray-300">{f}</span>
+
+            <div className="px-5 py-4 space-y-3">
+              {[
+                { icon: '📌', label: 'Título SEO', example: 'Auriculares Bluetooth Pro — Cancelación de ruido activa, 30h batería' },
+                { icon: '📝', label: 'Descripción', example: 'Sumérgete en el sonido con nuestros auriculares de última generación. Tecnología ANC avanzada...' },
+                { icon: '🔍', label: 'Meta-título y descripción', example: 'Optimizados para posicionar en Google y marketplaces' },
+                { icon: '✦', label: 'Puntos clave del producto', example: '5 bullet points persuasivos listos para Amazon o Etsy' },
+                { icon: '🏷', label: 'Keywords SEO', example: 'auriculares bluetooth, noise cancelling, auriculares inalámbricos...' },
+              ].map(item => (
+                <div key={item.label} className="flex gap-3 items-start">
+                  <span className="text-base leading-none mt-0.5 shrink-0">{item.icon}</span>
+                  <div className="min-w-0">
+                    <p className="text-xs font-semibold text-gray-700">{item.label}</p>
+                    <p className="text-[11px] text-gray-400 mt-0.5 leading-relaxed">{item.example}</p>
+                  </div>
                 </div>
               ))}
+            </div>
+
+            <div className="px-5 py-4 bg-gradient-to-br from-indigo-50/50 to-violet-50/50 border-t border-indigo-50">
+              <p className="text-xs text-indigo-500 text-center">
+                Rellena el formulario y pulsa <span className="font-semibold">Generar listing</span>
+              </p>
             </div>
           </div>
         )}

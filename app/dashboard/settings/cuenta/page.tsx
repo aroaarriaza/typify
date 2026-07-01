@@ -3,6 +3,8 @@ import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { logout } from '@/app/(auth)/actions'
 import AccountForm from './AccountForm'
+import AvatarUpload from './AvatarUpload'
+import EmailForm from './EmailForm'
 
 export default async function CuentaPage() {
   const supabase = await createClient()
@@ -11,31 +13,36 @@ export default async function CuentaPage() {
 
   const meta = user.user_metadata ?? {}
   const displayName: string = meta.display_name ?? ''
+  const avatarUrl: string = meta.avatar_url ?? ''
   const isAdmin = user.email === 'aroaarriaza@gmail.com'
   const initial = (displayName?.[0] ?? user.email?.[0] ?? 'U').toUpperCase()
 
   return (
     <div className="space-y-3">
+      {/* Perfil — avatar + nombre */}
       <section className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
         <div className="px-6 py-4 border-b border-gray-50">
           <h2 className="text-sm font-semibold text-gray-900">Perfil</h2>
         </div>
-
-        <div className="px-6 py-5 flex items-center gap-4 border-b border-gray-50">
-          <div className="w-12 h-12 rounded-full bg-gradient-to-br from-indigo-500 to-violet-500 flex items-center justify-center shadow-sm shrink-0">
-            <span className="text-lg font-bold text-white">{initial}</span>
-          </div>
-          <div className="min-w-0">
-            <p className="text-sm font-semibold text-gray-900 truncate">{displayName || user.email}</p>
-            {displayName && <p className="text-xs text-gray-400 truncate">{user.email}</p>}
-          </div>
+        <div className="px-6 py-5 border-b border-gray-50">
+          <AvatarUpload avatarUrl={avatarUrl} initial={initial} />
         </div>
-
         <div className="px-6 py-5">
           <AccountForm displayName={displayName} />
         </div>
       </section>
 
+      {/* Email */}
+      <section className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+        <div className="px-6 py-4 border-b border-gray-50">
+          <h2 className="text-sm font-semibold text-gray-900">Correo electrónico</h2>
+        </div>
+        <div className="px-6 py-5">
+          <EmailForm currentEmail={user.email ?? ''} />
+        </div>
+      </section>
+
+      {/* Acciones */}
       <section className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden divide-y divide-gray-50">
         <div className="px-6 py-4">
           <h2 className="text-sm font-semibold text-gray-900">Acciones</h2>
