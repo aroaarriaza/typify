@@ -365,7 +365,7 @@ export default function GeneratorShell({
             </div>
 
             {/* Feature list */}
-            <div className="px-5 py-5 flex flex-col justify-evenly">
+            <div className="px-4 py-4 flex flex-col justify-evenly gap-2">
               {([
                 { icon: '📌', label: 'Título SEO', example: 'Auriculares Bluetooth Pro — Cancelación de ruido activa, 30h', pill: 'bg-amber-50 border-amber-100 text-amber-600' },
                 { icon: '📝', label: 'Descripción persuasiva', example: 'Sumérgete en el sonido con nuestros auriculares de última generación...', pill: 'bg-blue-50 border-blue-100 text-blue-600' },
@@ -375,15 +375,15 @@ export default function GeneratorShell({
               ] as const).map((item, i) => (
                 <div
                   key={item.label}
-                  className="flex gap-3 items-start animate-fade-up"
+                  className="flex gap-3 items-center rounded-xl bg-white/70 border border-gray-100 px-3.5 py-3 animate-fade-up"
                   style={{ animationDelay: `${i * 70}ms`, animationFillMode: 'both' }}
                 >
-                  <span className={`inline-flex items-center justify-center w-7 h-7 rounded-lg border text-xs shrink-0 ${item.pill}`}>
+                  <span className={`inline-flex items-center justify-center w-10 h-10 rounded-xl border text-lg shrink-0 ${item.pill}`}>
                     {item.icon}
                   </span>
                   <div className="min-w-0">
-                    <p className="text-xs font-semibold text-gray-800">{item.label}</p>
-                    <p className="text-[11px] text-gray-400 mt-0.5 leading-relaxed">{item.example}</p>
+                    <p className="text-sm font-semibold text-gray-800">{item.label}</p>
+                    <p className="text-xs text-gray-400 mt-0.5 leading-relaxed">{item.example}</p>
                   </div>
                 </div>
               ))}
