@@ -348,7 +348,7 @@ export default function GeneratorShell({
             </div>
           </div>
         ) : (
-          <div className="flex-1 flex flex-col glass rounded-2xl shadow-sm shadow-indigo-100/50 border border-white/80 overflow-hidden animate-fade-in">
+          <div className="flex-1 grid grid-rows-[auto_1fr_auto] glass rounded-2xl shadow-sm shadow-indigo-100/50 border border-white/80 overflow-hidden animate-fade-in">
             {/* Gradient header */}
             <div className="relative overflow-hidden bg-gradient-to-br from-indigo-600 via-violet-600 to-purple-600 px-5 py-5">
               <div className="absolute -top-6 -right-6 w-28 h-28 bg-white/10 rounded-full blur-2xl pointer-events-none" />
@@ -365,7 +365,7 @@ export default function GeneratorShell({
             </div>
 
             {/* Feature list */}
-            <div className="flex-1 px-5 py-5 space-y-4">
+            <div className="px-5 py-5 flex flex-col justify-evenly">
               {([
                 { icon: '📌', label: 'Título SEO', example: 'Auriculares Bluetooth Pro — Cancelación de ruido activa, 30h', pill: 'bg-amber-50 border-amber-100 text-amber-600' },
                 { icon: '📝', label: 'Descripción persuasiva', example: 'Sumérgete en el sonido con nuestros auriculares de última generación...', pill: 'bg-blue-50 border-blue-100 text-blue-600' },
