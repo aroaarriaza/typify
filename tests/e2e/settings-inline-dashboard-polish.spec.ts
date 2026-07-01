@@ -28,7 +28,7 @@ test('settings: fila de contraseña es solo enlace (no form)', () => {
 test('dashboard: panel derecho usa flex flex-col cuando está vacío', () => {
   const code = readFileSync(resolve(process.cwd(), SHELL), 'utf-8')
   expect(code).toContain("'flex flex-col'")
-  expect(code).toContain("flex-1 flex flex-col")
+  expect(code).toContain("flex-1 grid grid-rows-[auto_1fr_auto]")
 })
 
 test('dashboard: grid principal sin items-start para altura igual', () => {
