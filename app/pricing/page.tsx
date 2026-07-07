@@ -1,4 +1,11 @@
+import type { Metadata } from 'next'
 import Link from 'next/link'
+
+export const metadata: Metadata = {
+  title: "Precios",
+  description: "Empieza gratis con 10 créditos al mes. Actualiza a Pro por 9€/mes y obtén 100 créditos para generar listings ilimitados.",
+  alternates: { canonical: "/pricing" },
+}
 
 export default function PricingPage() {
   return (
