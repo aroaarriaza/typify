@@ -108,6 +108,19 @@ export default async function DashboardPage() {
           </div>
         </div>
 
+        {/* Tabs nav */}
+        <nav className="flex gap-1 p-1 glass rounded-xl border border-white/80 w-fit">
+          <span className="text-sm px-4 py-1.5 rounded-lg bg-white shadow-sm text-indigo-600 font-semibold">
+            Generar
+          </span>
+          <Link href="/dashboard/analyze" className="text-sm px-4 py-1.5 rounded-lg text-gray-500 hover:text-gray-700 transition-colors font-medium">
+            Analizar
+          </Link>
+          <Link href="/dashboard/history" className="text-sm px-4 py-1.5 rounded-lg text-gray-500 hover:text-gray-700 transition-colors font-medium">
+            Historial
+          </Link>
+        </nav>
+
         <GeneratorShell credits={credits} />
         <HistorySection generations={generations ?? []} />
       </main>
