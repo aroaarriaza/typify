@@ -94,6 +94,12 @@ ESTRUCTURA DE RESPUESTA EXACTA:
 
     const analysis = analysisSchema.parse(JSON.parse(match[0]))
 
+    await supabase.from('generations').insert({
+      user_id: user.id,
+      prompt: listing.trim().slice(0, 120),
+      result: JSON.stringify({ _type: 'analysis', ...analysis }),
+    })
+
     return Response.json(analysis)
   } catch (err) {
     console.error('[analyze]', err instanceof Error ? err.message : String(err))
