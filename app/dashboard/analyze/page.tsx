@@ -49,6 +49,12 @@ export default async function AnalyzePage() {
             Analizar
           </span>
           <Link
+            href="/dashboard/bulk"
+            className="text-sm px-4 py-1.5 rounded-lg text-gray-500 hover:text-gray-700 transition-colors font-medium"
+          >
+            Bulk
+          </Link>
+          <Link
             href="/dashboard/history"
             className="text-sm px-4 py-1.5 rounded-lg text-gray-500 hover:text-gray-700 transition-colors font-medium"
           >
