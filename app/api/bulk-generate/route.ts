@@ -136,5 +136,12 @@ export async function POST(req: Request) {
     s.status === 'fulfilled' ? s.value : { status: 'error', name: '?', error: String(s.reason) }
   )
 
+  const names = products.map(p => p.name).join(', ')
+  await supabase.from('generations').insert({
+    user_id: user.id,
+    prompt: `[bulk] ${products.length} productos: ${names}`.slice(0, 200),
+    result: JSON.stringify({ _type: 'bulk', results }),
+  })
+
   return Response.json(results)
 }
