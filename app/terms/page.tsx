@@ -1,4 +1,11 @@
+import type { Metadata } from 'next'
 import Link from 'next/link'
+
+export const metadata: Metadata = {
+  title: "Términos de Servicio",
+  description: "Términos y condiciones de uso de Typify. Conoce tus derechos y obligaciones al usar nuestro servicio.",
+  alternates: { canonical: "/terms" },
+}
 
 export default function TermsPage() {
   return (

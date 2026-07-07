@@ -1,4 +1,38 @@
+import type { Metadata } from 'next'
 import Link from 'next/link'
+
+export const metadata: Metadata = {
+  title: "Typify — Listings de e-commerce con IA",
+  description: "Genera títulos SEO, descripciones persuasivas, meta tags y bullet points para tus productos en Amazon, Etsy o Shopify. Empieza gratis.",
+  alternates: { canonical: "/" },
+}
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Typify",
+  "description": "Generador de listings de e-commerce con inteligencia artificial. Crea títulos SEO, descripciones persuasivas, meta tags y keywords para Amazon, Etsy, Shopify y más.",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "Web",
+  "inLanguage": "es",
+  "url": process.env.NEXT_PUBLIC_APP_URL ?? "https://typify-seven.vercel.app",
+  "offers": [
+    {
+      "@type": "Offer",
+      "name": "Gratis",
+      "price": "0",
+      "priceCurrency": "EUR",
+      "description": "10 créditos al mes"
+    },
+    {
+      "@type": "Offer",
+      "name": "Pro",
+      "price": "9",
+      "priceCurrency": "EUR",
+      "description": "100 créditos al mes"
+    }
+  ]
+}
 import ParticleCanvas from './components/ParticleCanvas'
 import ScrambleText from './components/ScrambleText'
 import ScrambleOnScroll from './components/ScrambleOnScroll'
@@ -15,6 +49,10 @@ import HelixCanvas from './components/HelixCanvas'
 export default function HomePage() {
   return (
     <div className="min-h-screen" style={{background:'#07050f'}}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
 
       {/* Nav — glassmorphism oscuro sobre hero */}
       <nav className="fixed top-0 left-0 right-0 z-50 border-b border-white/10" style={{background: 'rgba(8,2,21,0.7)', backdropFilter: 'blur(20px)'}}>

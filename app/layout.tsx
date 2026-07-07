@@ -12,13 +12,19 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://typify-seven.vercel.app"
+
 export const metadata: Metadata = {
-  title: "Typify — Listings de e-commerce con IA",
-  description: "Genera títulos, descripciones, SEO y bullet points para tus productos en segundos. Empieza gratis.",
+  title: {
+    default: "Typify — Listings de e-commerce con IA",
+    template: "%s | Typify",
+  },
+  description: "Genera títulos, descripciones SEO y bullet points para tus productos en segundos. Empieza gratis.",
+  metadataBase: new URL(APP_URL),
   openGraph: {
     title: "Typify — Listings de e-commerce con IA",
-    description: "Genera títulos, descripciones, SEO y bullet points para tus productos en segundos.",
-    url: "https://typify-seven.vercel.app",
+    description: "Genera listings completos para tus productos en segundos con IA.",
+    url: APP_URL,
     siteName: "Typify",
     locale: "es_ES",
     type: "website",
@@ -28,7 +34,7 @@ export const metadata: Metadata = {
     title: "Typify — Listings de e-commerce con IA",
     description: "Genera listings completos para tus productos en segundos con IA.",
   },
-  metadataBase: new URL("https://typify-seven.vercel.app"),
+  robots: { index: true, follow: true },
 };
 
 export default function RootLayout({
